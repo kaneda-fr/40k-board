@@ -13,9 +13,6 @@ export class MatchComponent implements OnChanges {
 
   constructor(private apiClientService: ApiClientService) { }
 
-  /*ngOnInit() {
-    this.getMatch(this.joueur);
-  }*/
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
     const joueur = changes['joueur'];
     console.log('change ' + joueur.currentValue);

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Echellon de Commandement 40k';
+  title = 'Echelons de Commandement 40k';
 }
