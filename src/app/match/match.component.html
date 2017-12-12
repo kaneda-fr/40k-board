@@ -1,0 +1,13 @@
+<div>
+  <table>
+  <tbody>
+    <tr><th>Date</th><th>Vainqueur</th><th>Perdant</th></tr>
+    <tr *ngFor="let match of matches">
+       <td>{{match.date | date}}</td>
+       <td>{{match.vainqueur}}</td>
+       <td>{{match.perdant}}</td>
+     </tr>
+  </tbody>
+</table>
+</div>
+

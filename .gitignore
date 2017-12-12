@@ -1,2 +1,7 @@
 .remote-sync.json
+.editorconfig
+.metadata
+.project
+.settings
 *.csv
+node_modules
