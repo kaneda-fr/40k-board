@@ -8,12 +8,7 @@ import { joueur } from '../models/joueur';
 })
 export class JoueurComponent implements OnInit {
 
-  joueur: joueur = {
-    nom: 'Seb',
-    armee: 'T\'au',
-    classement: 1,
-    parties: 0
-  };
+  joueur: joueur;
 
   constructor() { }
 

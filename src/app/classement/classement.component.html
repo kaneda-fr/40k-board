@@ -11,7 +11,7 @@
 -->
 
 <div class="classement">
-<h2>Classement</h2>
+<!-- >h2>Classement</h2-->
 <table>
   <tbody>
     <tr><th>Position</th><th>Nom</th></tr>
@@ -23,11 +23,11 @@
      </tr>
   </tbody>
 </table>
-</div>
+
 
 
 <div *ngIf="selectedJoueur" class="badge">
-  <h2>Details du joueur</h2>
+  <h2>Details</h2>
   <div><span>Armee: </span>{{selectedJoueur.armee}}</div>
   <div><span>Nombre de parties: </span>{{selectedJoueur.parties}}</div>
   <!--  <div>
@@ -36,6 +36,8 @@
     </label>
   </div>
   -->
-  <h2>Liste des matchs joues par {{selectedJoueur.nom}}</h2>
+  <h2>Matchs joues</h2>
   <app-match joueur={{selectedJoueur.nom}}></app-match>
+</div>
+
 </div>
