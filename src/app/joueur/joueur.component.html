@@ -1,4 +1,6 @@
-<h2>Joueur: {{ joueur.nom | uppercase }}</h2>
-<div><span>Classement: </span>{{joueur.classement}}</div>
-<div><span>Armee: </span>{{joueur.armee}}</div>
-<div><span>Nombre de parties: </span>{{joueur.parties}}</div>
+<div  *ngIf="joueur">
+	<span>Armee principale: {{joueur[0].armee}}</span>
+</div>
+<div  *ngIf="joueur">
+	<span>Nombre de parties: {{joueur[0].parties}}</span>
+</div>
