@@ -1,6 +1,6 @@
 import { Component, OnInit, Input,  OnChanges, SimpleChange} from '@angular/core';
-import { match } from '../models/match';
-import { ApiClientService } from '../api.service';
+import { joueur, match } from '../models';
+import { ApiService } from '../services';
 
 @Component({
   selector: 'app-match',
@@ -11,7 +11,7 @@ export class MatchComponent implements OnChanges {
   @Input() joueur: string;
   matches: match[];
 
-  constructor(private apiClientService: ApiClientService) { }
+   constructor(private apiService: ApiService) { }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
     const joueur = changes['joueur'];
@@ -21,7 +21,7 @@ export class MatchComponent implements OnChanges {
   }
 
    getMatch(nom?: string): void {
-    this.apiClientService.getMatch(nom)
+    this.apiService.matchjoueurNomGET(nom)
      .subscribe(match => this.matches = match);
   }
 }

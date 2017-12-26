@@ -1,8 +1,9 @@
 /* tslint:disable */
 
+/**
+ */
 export class Error {
-		code: number;
-		message: string;
-		fields: string;
-
+    code?: number;
+    message?: string;
+    fields?: string;
 }

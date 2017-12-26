@@ -4,8 +4,14 @@
     <tr><th>Date</th><th>Vainqueur</th><th>Perdant</th></tr>
     <tr *ngFor="let match of matches">
        <td>{{match.date | date}}</td>
-       <td>{{match.vainqueur}}</td>
-       <td>{{match.perdant}}</td>
+       <td><table>
+       	<tr><td>{{match.vainqueur[0].nom}}</td></tr>
+       	<tr><td>{{match.vainqueur[0].armee}}</td></tr>
+       </table></td>
+       <td><table>
+       	<tr><td>{{match.perdant[0].nom}}</td></tr>
+       	<tr><td>{{match.perdant[0].armee}}</td></tr>
+       </table></td>
      </tr>
   </tbody>
 </table>

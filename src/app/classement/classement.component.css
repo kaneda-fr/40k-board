@@ -1,7 +1,9 @@
 /* classementComponent's private CSS styles */
 .selected {
   /*background-color: #CFD8DC !important;*/
-  color: white;
+  /*background-color: rgba(102, 102, 153, 0.4) !important;*/
+  color:  #cc0000;
+  text-shadow: 1px 1px 3px #ffffff;
 }
 .classement {
   margin: 0 0 2em 0;
@@ -17,6 +19,18 @@
 	align: center;
 }
 
+
+.classement th {
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  /*background-color: #EEE;*/
+  margin: .5em;
+  padding: .3em 0;
+  height: 1.6em;
+  border-radius: 4px;
+  color: #369;
+}
 
 .classement tr {
   cursor: pointer;
@@ -37,24 +51,48 @@
   background-color: #DDD;
   left: .1em;
 }
+
+.mat-expansion-panel {
+	background-color: rgba(109, 112, 120, 0.5);
+}
+
+.classement .mat-expansion-panel-header-description {
+	color: white;
+}
+
+.classement .mat-expansion-panel-header-title {
+	color: #9fbfdf;
+}
+
+
+.classement .mat-expansion-panel {
+	color: white !important;
+}
+
 .classement .text {
   position: relative;
   top: -3px;
 }
 .badge {
-  display: inline-block;
+  /*display: inline-block;*/
   font-size: large;
   color: white;
   padding: 0.8em 0.7em 0 0.7em;
   /*background-color: #607D8B;*/
   line-height: 1em;
   position: relative;
-  left: -1px;
+  left: -70px;
   top: -4px;
   height: 1.8em;
   margin-right: .8em;
   border-radius: 4px 0 0 4px;
+  width: 500px;
 }
+
+.badge h2 {
+	align: center;
+}
+
 .h1{
 	color: red;
 }

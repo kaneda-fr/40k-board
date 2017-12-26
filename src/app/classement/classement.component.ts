@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { joueur } from '../models/joueur';
-import { ApiClientService } from '../api.service';
+import { joueur } from '../models';
+import { ApiService } from '../services';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -11,12 +11,13 @@ import { environment } from '../../environments/environment';
 export class ClassementComponent implements OnInit {
   classement: joueur[];
   selectedJoueur: joueur;
+  panelOpenState = false;
 
-  constructor(private apiClientService: ApiClientService) { }
+  constructor(private apiService: ApiService) { }
 
   ngOnInit() {
     this.getClassememt();
-    console.log('prod ? ' + environment.production);
+    console.log('are we in prod ? ' + environment.production);
   }
 
   onSelect(joueur: joueur): void {
@@ -24,7 +25,7 @@ export class ClassementComponent implements OnInit {
   }
 
  getClassememt(): void {
-    this.apiClientService.getClassement()
+    this.apiService.classementGET()
       .subscribe(classement => this.classement = classement);
   }
 }

@@ -1,0 +1,255 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API for 40k ranking",
+    "version": "0.0.2",
+    "title": "40k API"
+  },
+  "host": "hackedo.io",
+  "basePath": "/40k/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/classement": {
+      "get": {
+        "summary": "show board",
+        "description": "return the ranking board",
+        "operationId": "classementGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "date du classement",
+            "required": false,
+            "type": "string",
+            "format": "date-string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of players by ranking order",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/joueur"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
+    "/joueur/{nom}": {
+      "get": {
+        "description": "return a player by id",
+        "operationId": "joueurNomGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "nom",
+            "in": "path",
+            "description": "nom du joueur",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "show one player",
+            "schema": {
+              "$ref": "#/definitions/joueur"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
+    "/match": {
+      "get": {
+        "description": "return list of match",
+        "operationId": "matchGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "show one player",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/match"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      },
+      "put": {
+        "description": "record a match",
+        "operationId": "matchPUT",
+        "parameters": [
+          {
+            "name": "vainqueur",
+            "in": "query",
+            "description": "nom du vainqueur",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "perdant",
+            "in": "query",
+            "description": "nom du perdant",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date du match",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "retourne le match",
+            "schema": {
+              "$ref": "#/definitions/match"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
+    "/matchjoueur/{nom}": {
+      "get": {
+        "description": "return list of match for a player",
+        "operationId": "matchjoueurNomGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "nom",
+            "in": "path",
+            "description": "nom du joueur",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "liste des match",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/match"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    }
+  },
+  "definitions": {
+    "joueur": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "type": "string",
+          "description": "Name of the player"
+        },
+        "armee": {
+          "type": "string",
+          "description": "Army Name"
+        },
+        "classement": {
+          "type": "integer",
+          "description": "classement du joueur"
+        },
+        "parties": {
+          "type": "integer",
+          "description": "nombre de parties disputees"
+        }
+      }
+    },
+    "match": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date du match"
+        },
+        "vainqueur": {
+          "$ref": "#/definitions/joueur"
+        },
+        "perdant": {
+          "$ref": "#/definitions/joueur"
+        },
+        "formatPartie": {
+          "type": "string",
+          "description": "format de la partie"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

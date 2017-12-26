@@ -6,8 +6,15 @@ import { AppComponent } from './app.component';
 import { MatchComponent } from './match/match.component';
 import { JoueurComponent } from './joueur/joueur.component';
 import { ClassementComponent } from './classement/classement.component';
-import { ApiClientService } from './api.service';
 import { ClasssementparpositionPipe } from './classsementparposition.pipe';
+
+
+/**
+ * Module that provides instances for all API services
+ */
+import { ApiModule } from './api.module';
+
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -19,9 +26,10 @@ import { ClasssementparpositionPipe } from './classsementparposition.pipe';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ApiModule,
+    MaterialModule
   ],
-  providers: [ApiClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
