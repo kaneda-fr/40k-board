@@ -9,20 +9,19 @@
 		<app-classement></app-classement>
 	</div>
  	</mat-tab>
-  <mat-tab label="Stats">
-	<div style="text-align:center">
-	  <p>Stats coming soon</p>
-	</div>
+ 	<mat-tab label="Stats">
+		<app-stats></app-stats>
  	</mat-tab>
  	<mat-tab label="Admin">
-		<div *ngIf="!isLoggedIn" style="text-align:center">
+ 	<div *ngIf="!isLoggedIn" style="text-align:center">
 		<p>Vous devez vous connecter pour gerer vos matches</p>
 			<button (click)="login()" class="btn btn-lg btn-primary btn-block">
 	    		Login
 	  		</button>
-	  	</div>
-	  	<div *ngIf="isLoggedIn" style="text-align:center">
-	  			  <p>Admin page coming soon</p>
-	  	</div>
+	</div>
+	<div *ngIf="isLoggedIn" style="text-align:center">
+ 		<app-admin joueur={{joueur}}></app-admin>
+	</div>
+
 	</mat-tab>
  </mat-tab-group>

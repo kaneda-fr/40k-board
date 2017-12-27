@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FacebookService, LoginResponse} from 'ngx-facebook';
+import { ApiService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -7,10 +8,13 @@ import { FacebookService, LoginResponse} from 'ngx-facebook';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  [x: string]: any;
   title = 'Echelons de Commandement 40k';
   isLoggedIn = false;
+  joueur = 'unknown';
+  accessToken: String;
 
-  constructor(private fb: FacebookService) {
+  constructor(private fb: FacebookService, private apiService: ApiService) {
     console.log('Initializing Facebook');
 
     fb.init({
@@ -20,6 +24,17 @@ export class AppComponent {
 
   }
 
+  getjoueurfb(userid: string): void {
+    console.log('Appel API ' + userid);
+    this.apiService.joueurFBGET(userid)
+     .subscribe(joueur => {
+       console.log('got API response');
+       this.joueur = joueur.nom;
+       this.accessToken = joueur.accessToken;
+       this.isLoggedIn = true;
+     });
+  }
+
   /**
    * Login with minimal permissions. This allows you to see their public profile only.
    */
@@ -27,7 +42,7 @@ export class AppComponent {
     this.fb.login()
       .then((res: LoginResponse) => {
         if (res.status = 'connected') {
-          this.isLoggedIn = true;
+          this.getjoueurfb(res.authResponse.userID);
         } else {
           this.isLoggedIn = false;
         }

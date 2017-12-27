@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "API for 40k ranking",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "title": "40k API"
   },
   "host": "hackedo.io",
@@ -86,6 +86,39 @@
         "x-swagger-router-controller": "40k"
       }
     },
+    "/joueurfb/{userid}": {
+      "get": {
+        "description": "return a player by fb userid",
+        "operationId": "joueurFBGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "userid FB du joueur",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "show one player",
+            "schema": {
+              "$ref": "#/definitions/joueur"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
     "/match": {
       "get": {
         "description": "return list of match",
@@ -118,9 +151,30 @@
         "operationId": "matchPUT",
         "parameters": [
           {
+            "name": "joueur",
+            "in": "query",
+            "description": "nom du joueur qui entre le match",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "description": "token d'acces du joueur",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "vainqueur",
             "in": "query",
             "description": "nom du vainqueur",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "armeevainqueur",
+            "in": "query",
+            "description": "armee du vainqueur",
             "required": true,
             "type": "string"
           },
@@ -132,12 +186,61 @@
             "type": "string"
           },
           {
+            "name": "armeeperdant",
+            "in": "query",
+            "description": "armee du perdant",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "date",
             "in": "query",
             "description": "Date du match",
             "required": false,
             "type": "string",
             "format": "date-time"
+          },
+          {
+            "name": "formatPartie",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "format de la partie"
+          },
+          {
+            "name": "scenario",
+            "type": "string",
+            "description": "nom du scenario joue",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "points",
+            "type": "integer",
+            "description": "nombre de points de la partie",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "powerlevel",
+            "type": "integer",
+            "description": "nombre de PL de la partie",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "scorevainqueur",
+            "type": "integer",
+            "description": "score du vainqueur",
+            "in": "query",
+            "required": false
+          },
+          {
+            "name": "scoreperdant",
+            "type": "integer",
+            "description": "score du perdant",
+            "in": "query",
+            "required": false
           }
         ],
         "responses": {
@@ -213,6 +316,23 @@
         "parties": {
           "type": "integer",
           "description": "nombre de parties disputees"
+        },
+        "fbuserid": {
+          "type": "string",
+          "description": "userID facebook"
+        },
+        "admin": {
+          "type": "boolean",
+          "description": "indique si le joueur est admin"
+        },
+        "datecreation": {
+          "type": "string",
+          "format": "date-time",
+          "description": "date de creation du joueur"
+        },
+        "accessToken": {
+          "type": "string",
+          "description": "access token to athenticate requests"
         }
       }
     },
@@ -233,6 +353,26 @@
         "formatPartie": {
           "type": "string",
           "description": "format de la partie"
+        },
+        "scenario": {
+          "type": "string",
+          "description": "nom du scenario joue"
+        },
+        "points": {
+          "type": "integer",
+          "description": "nombre de points de la partie"
+        },
+        "powerlevel": {
+          "type": "integer",
+          "description": "nombre de PL de la partie"
+        },
+        "scorevainqueur": {
+          "type": "integer",
+          "description": "score du vainqueur"
+        },
+        "scoreperdant": {
+          "type": "integer",
+          "description": "score du perdant"
         }
       }
     },

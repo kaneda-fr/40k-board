@@ -17,6 +17,8 @@ import { FacebookModule } from 'ngx-facebook';
 import { ApiModule } from './api.module';
 
 import { MaterialModule } from './material.module';
+import { StatsComponent } from './stats/stats.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { MaterialModule } from './material.module';
     MatchComponent,
     JoueurComponent,
     ClassementComponent,
-    ClasssementparpositionPipe
+    ClasssementparpositionPipe,
+    StatsComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

@@ -8,4 +8,9 @@ export class match {
     vainqueur?: joueur;
     perdant?: joueur;
     formatPartie?: string;
+    scenario?: string;
+    points?: number;
+    powerlevel?: number;
+    scorevainqueur?: number;
+    scoreperdant?: number;
 }

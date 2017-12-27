@@ -7,4 +7,8 @@ export class joueur {
     armee?: string;
     classement?: number;
     parties?: number;
+    fbuserid?: string;
+    admin?: boolean;
+    datecreation?: string;
+    accessToken?: string;
 }
