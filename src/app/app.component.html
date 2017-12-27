@@ -1,5 +1,4 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<mat-tab-group class="demo-tab-group">
+<mat-tab-group class="main-tab-group">
   <mat-tab label="Classement">
 	<div style="text-align:center">
 	  <h1>
@@ -15,4 +14,15 @@
 	  <p>Stats coming soon</p>
 	</div>
  	</mat-tab>
+ 	<mat-tab label="Admin">
+		<div *ngIf="!isLoggedIn" style="text-align:center">
+		<p>Vous devez vous connecter pour gerer vos matches</p>
+			<button (click)="login()" class="btn btn-lg btn-primary btn-block">
+	    		Login
+	  		</button>
+	  	</div>
+	  	<div *ngIf="isLoggedIn" style="text-align:center">
+	  			  <p>Admin page coming soon</p>
+	  	</div>
+	</mat-tab>
  </mat-tab-group>

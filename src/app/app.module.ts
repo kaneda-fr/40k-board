@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -8,6 +9,7 @@ import { JoueurComponent } from './joueur/joueur.component';
 import { ClassementComponent } from './classement/classement.component';
 import { ClasssementparpositionPipe } from './classsementparposition.pipe';
 
+import { FacebookModule } from 'ngx-facebook';
 
 /**
  * Module that provides instances for all API services
@@ -28,7 +30,8 @@ import { MaterialModule } from './material.module';
     BrowserModule,
     HttpClientModule,
     ApiModule,
-    MaterialModule
+    MaterialModule,
+    FacebookModule.forRoot()
   ],
   bootstrap: [AppComponent]
 })

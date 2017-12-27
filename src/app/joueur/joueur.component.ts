@@ -9,7 +9,7 @@ import { ApiService } from '../services';
 })
 export class JoueurComponent implements OnInit {
   @Input() nom: string;
-  joueur: joueur[];
+  joueur: joueur;
 
   constructor(private apiService: ApiService) { }
 
