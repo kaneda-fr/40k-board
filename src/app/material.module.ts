@@ -6,7 +6,10 @@ import { MatButtonModule,
   MatCardModule,
   MatExpansionModule,
   MatFormFieldModule,
-  MatTabsModule
+  MatTabsModule,
+  MatSelectModule,
+  MatOptionModule,
+  MatInputModule
 } from '@angular/material';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -21,7 +24,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatExpansionModule,
     MatFormFieldModule,
     BrowserAnimationsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule
   ],
   exports: [
     MatButtonModule,
@@ -32,7 +38,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     MatExpansionModule,
     MatFormFieldModule,
     BrowserAnimationsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule
   ]
 })
 export class MaterialModule { }

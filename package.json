@@ -6,7 +6,7 @@
     "ng": "ng",
     "prestart": "npm install",
     "start": "ng-swagger-gen && ng serve",
-    "build": "ng-swagger-gen && ng build",
+    "build": "ng-swagger-gen && ng build --prod --base-href=/40k/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

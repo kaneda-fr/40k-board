@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 import { FacebookService, LoginResponse} from 'ngx-facebook';
 import { ApiService } from './services';
 
@@ -15,10 +15,18 @@ export class AppComponent {
   accessToken: String;
 
   constructor(private fb: FacebookService, private apiService: ApiService) {
+    let fbAppId;
     console.log('Initializing Facebook');
 
+    if (! isDevMode()) {
+      fbAppId = '160617551370574';
+    } else {
+      console.log('FB will be initialized for Dev Mode');
+      fbAppId = '638322569876518';
+    }
+
     fb.init({
-      appId: '1927971220769787',
+      appId: fbAppId,
       version: 'v2.9'
     });
 
@@ -29,7 +37,9 @@ export class AppComponent {
     this.apiService.joueurFBGET(userid)
      .subscribe(joueur => {
        console.log('got API response');
+       if (joueur.nom) {
        this.joueur = joueur.nom;
+       }
        this.accessToken = joueur.accessToken;
        this.isLoggedIn = true;
      });
