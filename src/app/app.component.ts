@@ -8,11 +8,12 @@ import { ApiService } from './services';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  [x: string]: any;
   title = 'Echelons de Commandement 40k';
   isLoggedIn = false;
   joueur = 'unknown';
   accessToken: String;
+  userId: string;
+  isAdmin: boolean;
 
   constructor(private fb: FacebookService, private apiService: ApiService) {
     let fbAppId;
@@ -38,9 +39,12 @@ export class AppComponent {
      .subscribe(joueur => {
        console.log('got API response');
        if (joueur.nom) {
-       this.joueur = joueur.nom;
+         this.joueur = joueur.nom;
        }
-       this.accessToken = joueur.accessToken;
+       if (joueur.admin) {
+         this.isAdmin = joueur.admin;
+         console.log('Joueur Admin: ' + joueur.admin);
+       }
        this.isLoggedIn = true;
      });
   }
@@ -52,6 +56,9 @@ export class AppComponent {
     this.fb.login()
       .then((res: LoginResponse) => {
         if (res.status = 'connected') {
+          console.log(res.authResponse.userID + ' -- ' + res.authResponse.accessToken);
+          this.accessToken = res.authResponse.userID + '----' + res.authResponse.accessToken;
+          this.userId = res.authResponse.userID;
           this.getjoueurfb(res.authResponse.userID);
         } else {
           this.isLoggedIn = false;

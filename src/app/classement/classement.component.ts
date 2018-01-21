@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { joueur } from '../models';
 import { ApiService } from '../services';
-import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-classement',
@@ -17,7 +16,6 @@ export class ClassementComponent implements OnInit {
 
   ngOnInit() {
     this.getClassememt();
-    console.log('are we in prod ? ' + environment.production);
   }
 
   onSelect(joueur: joueur): void {

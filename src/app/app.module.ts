@@ -1,6 +1,10 @@
+import '../polyfills';
+import 'hammerjs';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -29,15 +33,21 @@ import { AdminComponent } from './admin/admin.component';
     ClassementComponent,
     ClasssementparpositionPipe,
     StatsComponent,
-    AdminComponent
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     ApiModule,
     MaterialModule,
-    FacebookModule.forRoot()
+    FacebookModule.forRoot(),
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+platformBrowserDynamic().bootstrapModule(AppModule);

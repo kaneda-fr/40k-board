@@ -1,0 +1,19 @@
+
+img {
+    width:inherit;
+}
+
+div.fixed-logo {
+   position: fixed;
+   top: 20px;
+   right: 20px;
+   height: 40px;
+   width: 100px;
+   /* background: #401145; */
+   z-index: 0;
+   /* color: #FFF;
+   opacity: 1; 
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out */
+}

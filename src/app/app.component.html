@@ -1,3 +1,7 @@
+<div class="fixed-logo">
+ <img src="assets/ludikraken.png" alt="Association Ludikraken"> 
+</div>
+
 <mat-tab-group class="main-tab-group">
   <mat-tab label="Classement">
 	<div style="text-align:center">
@@ -26,7 +30,7 @@
 			</ul>
 			</div>
 			</div>
-			A l'issue d'un match l'un des joueur doit enregistrer le resultat via ce site ou contacter l'equipe 40k via la groupe whatsapp.<BR>
+			A l'issue d'un match, l'un des joueur doit enregistrer le resultat via la partie Admin du site ou contacter l'equipe 40k via la groupe whatsapp.<BR>
 		</div>
  	</mat-tab>
  	<mat-tab label="Admin">
@@ -37,7 +41,7 @@
 	  		</button>
 	</div>
 	<div *ngIf="isLoggedIn" style="text-align:center">
- 		<app-admin joueur={{joueur}}></app-admin>
+ 		<app-admin joueur={{joueur}} accessToken={{accessToken}} userId={{userId}} isAdmin={{isAdmin}}></app-admin>
 	</div>
 
 	</mat-tab>

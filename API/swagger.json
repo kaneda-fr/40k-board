@@ -2,18 +2,25 @@
   "swagger": "2.0",
   "info": {
     "description": "API for 40k ranking",
-    "version": "0.0.3",
+    "version": "0.0.6",
     "title": "40k API"
   },
   "host": "hackedo.io",
   "basePath": "/40k/api",
   "schemes": [
-    "http",
-    "https"
+    "https",
+    "http"
   ],
   "produces": [
     "application/json"
   ],
+  "securityDefinitions": {
+    "FBApiKeyAuth": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "X-FB-API-Key"
+    }
+  },
   "paths": {
     "/classement": {
       "get": {
@@ -74,6 +81,87 @@
             "description": "show one player",
             "schema": {
               "$ref": "#/definitions/joueur"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
+    "/joueur": {
+      "put": {
+        "description": "Enregistre ou met a jour un joueur",
+        "operationId": "joueurPUT",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "FBApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "joueur",
+            "in": "body",
+            "description": "details du joueur",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/joueur"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "show one player",
+            "schema": {
+              "$ref": "#/definitions/joueur"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
+      }
+    },
+    "/joueurs": {
+      "get": {
+        "description": "return list of all players",
+        "operationId": "joueursGET",
+        "produces": [
+          "application/json"
+        ],
+        "security": [
+          {
+            "FBApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-FB-API-Key",
+            "in": "query",
+            "type": "string",
+            "description": "FB token",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "show all player",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           "default": {
@@ -149,98 +237,20 @@
       "put": {
         "description": "record a match",
         "operationId": "matchPUT",
+        "security": [
+          {
+            "FBApiKeyAuth": []
+          }
+        ],
         "parameters": [
           {
-            "name": "joueur",
-            "in": "query",
-            "description": "nom du joueur qui entre le match",
+            "name": "match",
+            "in": "body",
+            "description": "details du la partie",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "accessToken",
-            "in": "query",
-            "description": "token d'acces du joueur",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "vainqueur",
-            "in": "query",
-            "description": "nom du vainqueur",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "armeevainqueur",
-            "in": "query",
-            "description": "armee du vainqueur",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "perdant",
-            "in": "query",
-            "description": "nom du perdant",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "armeeperdant",
-            "in": "query",
-            "description": "armee du perdant",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "date",
-            "in": "query",
-            "description": "Date du match",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "formatPartie",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "description": "format de la partie"
-          },
-          {
-            "name": "scenario",
-            "type": "string",
-            "description": "nom du scenario joue",
-            "in": "query",
-            "required": false
-          },
-          {
-            "name": "points",
-            "type": "integer",
-            "description": "nombre de points de la partie",
-            "in": "query",
-            "required": false
-          },
-          {
-            "name": "powerlevel",
-            "type": "integer",
-            "description": "nombre de PL de la partie",
-            "in": "query",
-            "required": false
-          },
-          {
-            "name": "scorevainqueur",
-            "type": "integer",
-            "description": "score du vainqueur",
-            "in": "query",
-            "required": false
-          },
-          {
-            "name": "scoreperdant",
-            "type": "integer",
-            "description": "score du perdant",
-            "in": "query",
-            "required": false
+            "schema": {
+              "$ref": "#/definitions/match"
+            }
           }
         ],
         "responses": {
@@ -303,11 +313,11 @@
       "properties": {
         "nom": {
           "type": "string",
-          "description": "Name of the player"
+          "description": "Nom du Joueur"
         },
         "armee": {
           "type": "string",
-          "description": "Army Name"
+          "description": "Armee principale du joueur"
         },
         "classement": {
           "type": "integer",
@@ -325,14 +335,27 @@
           "type": "boolean",
           "description": "indique si le joueur est admin"
         },
+        "actif": {
+          "type": "boolean",
+          "description": "indique si le compte est actif"
+        },
         "datecreation": {
           "type": "string",
           "format": "date-time",
           "description": "date de creation du joueur"
         },
-        "accessToken": {
+        "points": {
+          "type": "integer",
+          "description": "Nombre de  points joues"
+        },
+        "email": {
           "type": "string",
-          "description": "access token to athenticate requests"
+          "format": "email",
+          "description": "Adresse mail du joueur"
+        },
+        "fbname": {
+          "type": "string",
+          "description": "Nom du joueur dans FB"
         }
       }
     },
@@ -373,6 +396,35 @@
         "scoreperdant": {
           "type": "integer",
           "description": "score du perdant"
+        },
+        "briseurligne": {
+          "type": "string",
+          "description": "Joueur ayant score briseur de ligne"
+        },
+        "premiersang": {
+          "type": "string",
+          "description": "Joueur ayant score premier sang"
+        },
+        "seigneurguerre": {
+          "type": "string",
+          "description": "Joueur ayant score seigneur de guerre"
+        },
+        "tablerase": {
+          "type": "boolean",
+          "description": "la partie se termine par table rase"
+        },
+        "derniertour": {
+          "type": "integer",
+          "description": "numero du dernier tour"
+        },
+        "joueurentree": {
+          "type": "string",
+          "description": "nom du joueur qui a entre le match"
+        },
+        "dateentree": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date d'entree du match"
         }
       }
     },
