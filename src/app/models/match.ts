@@ -4,14 +4,16 @@ import { joueur } from './joueur';
 export interface match {
 
   /**
-   * score du perdant
+   * score du vainqueur
    */
-   scoreperdant?: number;
+   scorevainqueur?: number;
 
   /**
-   * Date du match
+   * Id du match
    */
-   date?: string;
+   id?: string;
+
+  vainqueur?: joueur;
 
   perdant?: joueur;
 
@@ -19,6 +21,11 @@ export interface match {
    * format de la partie
    */
    formatPartie?: string;
+
+  /**
+   * type de match
+   */
+   type?: string;
 
   /**
    * nom du scenario joue
@@ -36,11 +43,14 @@ export interface match {
    powerlevel?: number;
 
   /**
-   * score du vainqueur
+   * Date du match
    */
-   scorevainqueur?: number;
+   date?: string;
 
-  vainqueur?: joueur;
+  /**
+   * score du perdant
+   */
+   scoreperdant?: number;
 
   /**
    * Joueur ayant score briseur de ligne

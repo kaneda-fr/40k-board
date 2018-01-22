@@ -3,6 +3,11 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material';
+
+import {Observable} from 'rxjs/Observable';
+import {startWith} from 'rxjs/operators/startWith';
+import {map} from 'rxjs/operators/map';
+
 import { ApiService } from '../services';
 import { match, joueur } from '../models';
 import * as moment from 'moment';
@@ -27,6 +32,9 @@ export class AdminComponent implements OnChanges, OnInit {
   picker1: string;
   heurePartie: number;
   minutesPartie: number;
+  scoreJ1: number;
+  scoreJ2: number;
+  vainqueur: string;
 
   listeArmees =  ['Adeptus Custodes', 'Adeptus Mechanicus', 'Adeptus Ministorum', 'Astra Militarum',
     'Blood Angels', 'Chaos Daemons', 'Chaos Space Marines', 'Craftworlds', 'Dark Angels',
@@ -34,12 +42,36 @@ export class AdminComponent implements OnChanges, OnInit {
     'Necrons', 'Officio Assassinorum', 'Orks', 'Questor Imperialis', 'Questor Traitoris',
     'Sisters of Silence', 'Space Marines', 'Space Wolves', 'Tau Empire', 'The Inquisition',
     'Thousand Sons', 'Tyranids', 'Ynnari'];
-  listeScenario = ['S1', 'S2'];
+  // listeType = ['Match Play', 'Open Play', 'Maelstrom of War', 'Eternal War'];
+  // listeScenario = ['S1', 'S2'];
+
+  listeType = [
+    {
+      type: 'Match Play',
+      scenario: ['S1', 'S2']
+    },
+    {
+      type: 'Open Play',
+      scenario: ['S3', 'S4']
+    },
+    {
+      type: 'Maelstrom of War',
+      scenario: [
+        'Mort Confirmée', 'Cibles d\'Opportunités', 'Tour de Force tactique',
+        'Course à la Victoire', 'Ordres Scellés', 'Reconnaissance'
+      ]
+    },
+    {
+      type: 'Eternal War',
+      scenario: ['Largage de Ravitaillement', 'Terre Calcinée', 'Dominer et Détruire', 'Ascension', 'Patrouille Volante']
+    },
+    ];
 
   match: match;
   joueur1: joueur;
   joueur2: joueur;
   partie: FormGroup;
+  filteredListeType: Observable<any[]>;
 
   // constructor(private apiService: ApiService, private match: match, private joueur1: match, private joueur2: match) { }
   constructor(private apiService: ApiService) { }
@@ -54,7 +86,10 @@ export class AdminComponent implements OnChanges, OnInit {
     this.match.date = moment().format();
     this.heurePartie = 1 ;
     this.minutesPartie = 1;
-
+    this.scoreJ1 = this.scoreJ2 = 0;
+    this.match.joueurentree = this.joueur;
+    this.match.dateentree = moment().format();
+    // this.match.type = this.listeType[0].type;
 
     this.partie = new FormGroup ({
       points: new FormControl(this.match.points, [Validators.min(1)]),
@@ -62,7 +97,14 @@ export class AdminComponent implements OnChanges, OnInit {
       pointsJ2: new FormControl(0, [Validators.min(1), this.validateMaxPoints.bind(this)]),
       nomJ1: new FormControl(this.nomJoueur),
       nomJ2: new FormControl(),
-      date: new FormControl(null, Validators.required)
+      date: new FormControl(null, Validators.required),
+      scoreJ1: new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
+      scoreJ2: new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
+      vainqueur: new FormControl('', [this.validateVainqueur.bind(this)]),
+      derniertour: new FormControl(5, [Validators.required]),
+      tablerase: new FormControl(0),
+      type: new FormControl(),
+      scenario: new FormControl(),
     });
 
     this.partie.controls['points'].valueChanges.subscribe(
@@ -74,19 +116,68 @@ export class AdminComponent implements OnChanges, OnInit {
       }
     );
 
+   this.partie.controls['scenario'].valueChanges.subscribe(
+      value => {
+        console.log('Scenario selectionne: ' + value);
+        if (value === undefined) {
+          this.match.type = undefined;
+          return;
+         }
+        for (const item of this.listeType){
+          for (const scenario of item.scenario){
+            if (scenario === value) {
+             console.log(item.type);
+              this.match.type = item.type;
+              this.partie.controls['type'].updateValueAndValidity();
+              return; // Exit as soon as we found a matching entry
+            }
+          }
+        }
+     }
+    );
+
     this.partie.controls['nomJ1'].valueChanges.subscribe(
       value => {
         this.getJoueur('joueur1', value);
       }
     );
+
     this.partie.controls['nomJ2'].valueChanges.subscribe(
       value => {
         this.getJoueur('joueur2', value);
       }
     );
 
+    this.partie.controls['scoreJ1'].valueChanges.subscribe(
+      value => {
+        if (this.scoreJ1 >= this.scoreJ2) {
+          this.vainqueur = 'joueur1';
+        } else {
+          this.vainqueur = 'joueur2';
+        }
+      }
+    );
+
+    this.partie.controls['scoreJ2'].valueChanges.subscribe(
+      value => {
+        if (this.scoreJ1 >= this.scoreJ2) {
+          this.vainqueur = 'joueur1';
+        } else {
+          this.vainqueur = 'joueur2';
+        }
+      }
+    );
+
+
     this.partie.controls['points'].markAsTouched();
     this.partie.controls['points'].updateValueAndValidity();
+
+
+    this.filteredListeType = this.partie.controls['type'].valueChanges
+      .pipe(
+        startWith(''),
+        map(item => item ? this.filtereListeType(item) : this.listeType.slice())
+      );
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
@@ -98,11 +189,20 @@ export class AdminComponent implements OnChanges, OnInit {
       .subscribe(joueurs => this.listeJoueurs = joueurs);
   }
 
+  filtereListeType(name: string) {
+  return this.listeType.filter(item =>
+    item.type.toLowerCase().indexOf(name.toLowerCase()) === 0);
+  }
+
  validateMaxPoints(c: FormControl): { [key: string]: boolean } {
     return (c.value <= this.match.points) ? null : {
       validateMaxPoints: true
       };
   }
+
+   validateVainqueur(c: FormControl): { [key: string]: boolean } {
+     return null;
+   }
 
   getPointsErrorMessage(joueur: string) {
     if (!joueur.localeCompare('J1')) {
@@ -132,8 +232,15 @@ export class AdminComponent implements OnChanges, OnInit {
     }
     // console.log(JSON.stringify(this.joueur1));
     // console.log(JSON.stringify(this.joueur2));
-    this.match.vainqueur = this.joueur1;
-    this.match.perdant = this.joueur2;
+    if (this.vainqueur === 'joueur1') {
+      this.match.vainqueur = this.joueur1;
+      this.match.perdant = this.joueur2;
+    } else {
+      this.match.vainqueur = this.joueur2;
+      this.match.perdant = this.joueur1;
+    }
+
+    console.log('Vainqueur: ' + JSON.stringify(this.vainqueur));
     console.log(JSON.stringify(this.match));
   }
 

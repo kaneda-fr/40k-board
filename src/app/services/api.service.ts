@@ -107,7 +107,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * Enregistre ou met a jour un joueur
+   * Enregistre ou met à jour un joueur
    * @param joueur details du joueur
    * @return show one player
    */
@@ -138,7 +138,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * Enregistre ou met a jour un joueur
+   * Enregistre ou met à jour un joueur
    * @param joueur details du joueur
    * @return show one player
    */
@@ -234,7 +234,7 @@ export class ApiService extends BaseService {
 
   /**
    * return list of match
-   * @return show one player
+   * @return list des matchs
    */
    matchGETResponse(): Observable<HttpResponse<match[]>> {
     let __params = this.newParams();
@@ -263,7 +263,7 @@ export class ApiService extends BaseService {
 
   /**
    * return list of match
-   * @return show one player
+   * @return list des matchs
    */
    matchGET(): Observable<match[]> {
     return this.matchGETResponse().pipe(
@@ -273,7 +273,7 @@ export class ApiService extends BaseService {
 
   /**
    * record a match
-   * @param match details du la partie
+   * @param match details de la partie
    * @return retourne le match
    */
    matchPUTResponse(match: match): Observable<HttpResponse<match>> {
@@ -304,7 +304,7 @@ export class ApiService extends BaseService {
 
   /**
    * record a match
-   * @param match details du la partie
+   * @param match details de la partie
    * @return retourne le match
    */
    matchPUT(match: match): Observable<match> {

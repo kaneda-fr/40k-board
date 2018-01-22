@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "API for 40k ranking",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "title": "40k API"
   },
   "host": "hackedo.io",
@@ -95,7 +95,7 @@
     },
     "/joueur": {
       "put": {
-        "description": "Enregistre ou met a jour un joueur",
+        "description": "Enregistre ou met à jour un joueur",
         "operationId": "joueurPUT",
         "produces": [
           "application/json"
@@ -217,7 +217,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "show one player",
+            "description": "list des matchs",
             "schema": {
               "type": "array",
               "items": {
@@ -246,7 +246,7 @@
           {
             "name": "match",
             "in": "body",
-            "description": "details du la partie",
+            "description": "details de la partie",
             "required": true,
             "schema": {
               "$ref": "#/definitions/match"
@@ -362,6 +362,10 @@
     "match": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id du match"
+        },
         "date": {
           "type": "string",
           "format": "date-time",
@@ -376,6 +380,10 @@
         "formatPartie": {
           "type": "string",
           "description": "format de la partie"
+        },
+        "type": {
+          "type": "string",
+          "description": "type de match"
         },
         "scenario": {
           "type": "string",

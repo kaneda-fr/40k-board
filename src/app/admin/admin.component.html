@@ -3,6 +3,7 @@
 </p>
 <p *ngIf="!isAdmin">Admin Page is coming soon</p>
 
+
 <form [formGroup]="partie" (ngSubmit)="onSubmit()" #MatchForm="ngForm">
 <div class="entree-match">
 	  <h3>Details de la partie</h3>
@@ -18,9 +19,20 @@
 	    <mat-error>Le nombre de poiints doir etre superieur a 0.</mat-error>
 	   </mat-form-field>
 	   <mat-form-field>
-	    <mat-select placeholder="Scenario" [(value)]="match.scenario">
-	      <mat-option [value]="">- Aucun -</mat-option>
-	      <mat-option *ngFor="let scenario of listeScenario" [value]="scenario"> {{ scenario }}</mat-option>
+	    <mat-select placeholder="Type de partie" [(value)]="match.type" [formControl]="partie.get('type')">
+	      <mat-option>- Aucun -</mat-option>
+	      <mat-option *ngFor="let group of listeType" [value]="group.type"> {{ group.type }}</mat-option>
+	    </mat-select>
+	  </mat-form-field>
+	   <mat-form-field>
+	    <mat-select placeholder="Scenario" [(value)]="match.scenario" [formControl]="partie.get('scenario')">
+	      <mat-option>- Aucun -</mat-option>
+	      <!--  mat-option *ngFor="let scenario of listeScenario" [value]="scenario"> {{ scenario }}</mat-option> -->
+	      <mat-optgroup *ngFor="let group of filteredListeType | async" [label]="group.type">
+		      <mat-option *ngFor="let scenario of group.scenario" [value]="scenario">
+		        {{ scenario }}
+		      </mat-option>
+		    </mat-optgroup>
 	    </mat-select>
 	  </mat-form-field>
 	  <h3>Joueur 1</h3>
@@ -43,7 +55,10 @@
 	    <input matInput type="number" placeholder="Points" [formControl]="partie.get('pointsJ1')" [(ngModel)]="joueur1.points" required>
 	    <mat-error>{{getPointsErrorMessage('J1')}}</mat-error>
 	  </mat-form-field>
-	  
+	  <mat-form-field>
+	    <input matInput type="number" placeholder="Score" [formControl]="partie.get('scoreJ1')" [(ngModel)]="scoreJ1" required>
+	    <mat-error>Score incorrect</mat-error>
+	  </mat-form-field>
 	  <h3>Joueur 2</h3>
 	  <mat-form-field *ngIf="!isAdmin">
 	   <mat-select placeholder="Nom" [(value)]="joueur2.nom"  required>
@@ -63,9 +78,54 @@
 	    <mat-form-field>
 	    <input matInput type="number" placeholder="Points" [formControl]="partie.get('pointsJ2')" [(ngModel)]="joueur2.points" required>
 	    <mat-error>{{getPointsErrorMessage('J2')}}</mat-error>
-	  </mat-form-field><BR>
+	  </mat-form-field>
+	  	  <mat-form-field>
+	    <input matInput type="number" placeholder="Score" [formControl]="partie.get('scoreJ2')" [(ngModel)]="scoreJ2" required>
+	    <mat-error>Score incorrect</mat-error>
+	  </mat-form-field>
+	  <BR>
+  <h3>Résultat</h3>
+  <label>
+  Vainqueur: 
+  <mat-radio-group [(ngModel)]="vainqueur" [formControl]="partie.get('vainqueur')" required>
+  <mat-radio-button value="joueur1">{{joueur1.nom}}</mat-radio-button>
+  <mat-radio-button value="joueur2">{{joueur2.nom}}</mat-radio-button>
+</mat-radio-group>
+  </label>
+  <br>
+  	  <mat-form-field>
+	    <mat-select placeholder="Dernier Tour" required [formControl]="partie.get('derniertour')" [(value)]="match.derniertour">
+	      <mat-option *ngFor="let tour of [1,2,3,4,5,6]" [value]="tour"> {{ tour }}</mat-option>
+	    </mat-select>
+	    </mat-form-field>
+	    <mat-checkbox [(ngModel)]="match.tablerase" [formControl]="partie.get('tablerase')">Table rase</mat-checkbox>
+  <table>
+  <tr>
+  <th></th>
+  <th>{{joueur1.nom}}</th>
+  <th>{{joueur2.nom}}</th>
+  </tr>
+  <tr>
+  <td>Briseur de ligne</td>
+  <td><mat-checkbox></mat-checkbox></td>
+  <td><mat-checkbox></mat-checkbox></td>
+  </tr>
+    <tr>
+  <td>Premier Sang</td>
+  <td><mat-checkbox></mat-checkbox></td>
+  <td><mat-checkbox></mat-checkbox></td>
+  </tr>
+    <tr>
+  <td>Seigneur de Guerre</td>
+  <td><mat-checkbox></mat-checkbox></td>
+  <td><mat-checkbox></mat-checkbox></td>
+  </tr>
+  </table>
 </div>
 <div style="margin-bottom: 1em">
+	<button mat-raised-button 
+	[disabled]="partie.pristine || partie.invalid"  
+	(click)="onSubmit()" class="btn btn-success">Enregistrer</button>
     <!--  <button type="submit"
             [disabled]="partie.pristine || partie.invalid" class="btn btn-success">Save</button> &nbsp;  -->
      <button type="submit"
@@ -73,5 +133,4 @@
      <button type="button" (click)="revert()"
             [disabled]="partie.pristine" class="btn btn-danger">Nouvelle Partie</button>
   </div>
-  <h3>Résultat</h3>
-	  </form>
+</form>
