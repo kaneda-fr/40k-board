@@ -1,4 +1,4 @@
-import { Component, isDevMode } from '@angular/core';
+import { Component, OnInit, isDevMode } from '@angular/core';
 import { FacebookService, LoginResponse} from 'ngx-facebook';
 import { ApiService } from './services';
 import { AuthService } from './auth.service';
@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Echelons de Commandement 40k';
   isLoggedIn = false;
   joueur = 'unknown';
@@ -18,8 +18,10 @@ export class AppComponent {
   isAdmin = false;
   isActif = false;
 
-  constructor(private fb: FacebookService, private apiService: ApiService, private authService: AuthService) {
-        console.log('Admin type: ' + typeof this.isAdmin);
+  constructor(private fb: FacebookService, private apiService: ApiService, private authService: AuthService) { }
+
+   ngOnInit() {
+         console.log('Admin type: ' + typeof this.isAdmin);
     console.log('isActif type: ' + typeof this.isActif);
 
     let fbAppId;
@@ -32,12 +34,13 @@ export class AppComponent {
       fbAppId = '638322569876518';
     }
 
-    fb.init({
+    this.fb.init({
       appId: fbAppId,
       version: 'v2.9'
     });
+   }
 
-  }
+
 
   getjoueurfb(userid: string): void {
     console.log('Appel API ' + userid);
