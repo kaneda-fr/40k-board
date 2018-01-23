@@ -27,11 +27,12 @@ export class AppComponent implements OnInit {
     let fbAppId;
     console.log('Initializing Facebook');
 
-    if (! isDevMode()) {
-      fbAppId = '160617551370574';
-    } else {
+    console.log('CHECKING DEVMODE');
+    if (isDevMode()) {
       console.log('FB will be initialized for Dev Mode');
       fbAppId = '638322569876518';
+    } else {
+      fbAppId = '160617551370574';
     }
 
     this.fb.init({
