@@ -30,8 +30,8 @@ export class AppComponent implements OnInit {
 
     const fbAppId = environment.fbAppId;
 
-    console.log('fbAppIs: ' + fbAppId );
-     /*
+    console.log('fbAppId: ' + fbAppId );
+     /* 
     if (isDevMode()) {
       console.log('FB will be initialized for Dev Mode');
       fbAppId = '638322569876518';
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
 
     this.fb.init({
       appId: fbAppId,
-      version: 'v2.9'
+      version: 'v2.11'
     });
    }
 
