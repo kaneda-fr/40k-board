@@ -3,6 +3,8 @@ import { FacebookService, LoginResponse} from 'ngx-facebook';
 import { ApiService } from './services';
 import { AuthService } from './auth.service';
 
+import { environment } from '../environments/environment';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,16 +26,18 @@ export class AppComponent implements OnInit {
          console.log('Admin type: ' + typeof this.isAdmin);
     console.log('isActif type: ' + typeof this.isActif);
 
-    let fbAppId;
     console.log('Initializing Facebook');
 
-    console.log('CHECKING DEVMODE');
+    const fbAppId = environment.fbAppId;
+
+    console.log('fbAppIs: ' + fbAppId );
+     /*
     if (isDevMode()) {
       console.log('FB will be initialized for Dev Mode');
       fbAppId = '638322569876518';
     } else {
       fbAppId = '160617551370574';
-    }
+    }*/
 
     this.fb.init({
       appId: fbAppId,
