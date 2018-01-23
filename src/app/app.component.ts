@@ -19,6 +19,9 @@ export class AppComponent {
   isActif = false;
 
   constructor(private fb: FacebookService, private apiService: ApiService, private authService: AuthService) {
+        console.log('Admin type: ' + typeof this.isAdmin);
+    console.log('isActif type: ' + typeof this.isActif);
+
     let fbAppId;
     console.log('Initializing Facebook');
 

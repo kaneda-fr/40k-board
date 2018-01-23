@@ -2,11 +2,13 @@ import { Component, OnInit, Input,  OnChanges, SimpleChange } from '@angular/cor
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material';
+import { MatFormFieldModule, MatSnackBar } from '@angular/material';
 
 import {Observable} from 'rxjs/Observable';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
+
+import * as converter from '../InputConverter';
 
 import { ApiService } from '../services';
 import { match, joueur } from '../models';
@@ -23,9 +25,9 @@ import * as moment from 'moment';
   ],
 })
 export class AdminComponent implements OnChanges, OnInit {
-  @Input() joueur: string;
-  @Input() isAdmin: boolean;
-  @Input() isActif: boolean;
+  @Input() @converter.InputConverter() joueur: string;
+  @Input() @converter.InputConverter(converter.BooleanConverter) isAdmin  = false;
+  @Input() @converter.InputConverter(converter.BooleanConverter)  isActif = false;
   nomJoueur: string;
   listeJoueurs: string[];
   picker1: string;
@@ -80,7 +82,7 @@ export class AdminComponent implements OnChanges, OnInit {
   filteredListeType: Observable<any[]>;
 
   // constructor(private apiService: ApiService, private match: match, private joueur1: match, private joueur2: match) { }
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.match = {};
@@ -260,7 +262,10 @@ export class AdminComponent implements OnChanges, OnInit {
     console.log('pristine; ' + this.partie.pristine);
     if (this.partie.invalid) {
       console.log('form is invalid');
+      return;
     }
+    this.openSnackBar('Sauvegarde de la partie en cours', '👾');
+
     // console.log(JSON.stringify(this.joueur1));
     // console.log(JSON.stringify(this.joueur2));
     if (this.vainqueur === 'joueur1') {
@@ -292,6 +297,13 @@ export class AdminComponent implements OnChanges, OnInit {
      .subscribe(match => {
        console.log('Saved match');
        console.log(JSON.stringify(match));
+       this.openSnackBar('Sauvegarde réussie', '😎');
+       // TODO Add snackbarinfo if save incomplete
+       this.revert();
+     },
+     error => {
+       console.log('oops', error.error);
+       this.openSnackBar(error.message, '☠️');
      });
   }
 
@@ -320,5 +332,11 @@ export class AdminComponent implements OnChanges, OnInit {
         this[item] = undefined;
       }
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+  this.snackBar.open(message, action, {
+    duration: 2000,
+  });
   }
 }

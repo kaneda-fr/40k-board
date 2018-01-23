@@ -1,9 +1,9 @@
 <p>Vous êtes connecté en tant que {{nomJoueur}}
-<span *ngIf="(isAdmin == 'true')">(admin)</span>
+<span *ngIf="isAdmin === true">(admin)</span>
 </p>
-<p *ngIf="isActif != 'true'">Compte désactivé, contactez un admin du site ou de l'assoce.</p>
+<p *ngIf="isActif !== true">Compte désactivé, contactez un admin du site ou de l'assoce.</p>
 
-<div *ngIf="isActif == 'true'">
+<div *ngIf="isActif === true">
 <form [formGroup]="partie" (ngSubmit)="onSubmit()" #MatchForm="ngForm">
 <div class="entree-match">
 	  <h3>Détails de la partie</h3>

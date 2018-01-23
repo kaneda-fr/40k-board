@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material';
+import { MatFormFieldModule, MatSnackBar } from '@angular/material';
 
 import { ApiService } from '../services';
 import { joueur } from '../models';
@@ -26,7 +26,7 @@ export class CreejoueurComponent implements OnInit {
 
   emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, public snackBar: MatSnackBar  ) { }
 
   ngOnInit() {
     this.joueur = {};
@@ -43,6 +43,7 @@ export class CreejoueurComponent implements OnInit {
     this.joueur.fbname = this.fbName;
     console.log(JSON.stringify(this.joueur));
 
+    this.openSnackBar('Sauvegarde en cours', '👾');
     this.saveJoueur(this.joueur);
 
   }
@@ -54,7 +55,17 @@ export class CreejoueurComponent implements OnInit {
        console.log('Joueur enregistré');
        console.log(JSON.stringify(joueur));
        this.joueurModifie.emit(this.joueur.nom);
+     },
+     error => {
+       console.log('oops', error.error);
+       this.openSnackBar(error.message, '☠️');
      });
   }
 
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
 }
+
