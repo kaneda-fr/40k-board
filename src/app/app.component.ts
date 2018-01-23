@@ -1,6 +1,7 @@
 import { Component, isDevMode } from '@angular/core';
 import { FacebookService, LoginResponse} from 'ngx-facebook';
 import { ApiService } from './services';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,13 @@ export class AppComponent {
   title = 'Echelons de Commandement 40k';
   isLoggedIn = false;
   joueur = 'unknown';
-  accessToken: String;
+  fbToken: string;
+  fbName: string;
   userId: string;
-  isAdmin: boolean;
+  isAdmin = false;
+  isActif = false;
 
-  constructor(private fb: FacebookService, private apiService: ApiService) {
+  constructor(private fb: FacebookService, private apiService: ApiService, private authService: AuthService) {
     let fbAppId;
     console.log('Initializing Facebook');
 
@@ -45,6 +48,13 @@ export class AppComponent {
          this.isAdmin = joueur.admin;
          console.log('Joueur Admin: ' + joueur.admin);
        }
+       if (joueur.actif) {
+         this.isActif = joueur.actif;
+         console.log('Joueur Actif: ' + joueur.actif);
+       } else {
+         this.isActif = false;
+         console.log('Joueur Actif ' + joueur.actif);
+       }
        this.isLoggedIn = true;
      });
   }
@@ -57,13 +67,17 @@ export class AppComponent {
       .then((res: LoginResponse) => {
         if (res.status = 'connected') {
           console.log(res.authResponse.userID + ' -- ' + res.authResponse.accessToken);
-          this.accessToken = res.authResponse.userID + '----' + res.authResponse.accessToken;
+          this.fbToken = res.authResponse.accessToken;
           this.userId = res.authResponse.userID;
-          this.getjoueurfb(res.authResponse.userID);
+          this.getjoueurfb(this.userId);
         } else {
           this.isLoggedIn = false;
         }
         console.log('Logged in', res);
+        // registering token with AuthService
+        this.authService.setToken(this.userId, this.fbToken);
+
+        this.getProfile();
       })
       .catch(this.handleError);
   }
@@ -78,10 +92,11 @@ export class AppComponent {
   /**
    * Get the user's profile
    */
-  getProfile() {
+  getProfile(): any {
     this.fb.api('/me')
       .then((res: any) => {
         console.log('Got the users profile', res);
+        this.fbName = res.name;
       })
       .catch(this.handleError);
   }
@@ -93,5 +108,11 @@ export class AppComponent {
    */
   private handleError(error) {
     console.error('Error processing action', error);
+  }
+
+  miseajour(nom) {
+    // Handle the event
+    console.log(JSON.stringify(nom));
+    this.joueur = nom;
   }
 }

@@ -9,7 +9,7 @@
   margin: 0 0 2em 0;
   list-style-type: none;
   padding: 0;
-  width: 15em;
+  /* width: 15em;*/
   position: fixed;
   left: 50%;
   margin-left: -100px;
@@ -82,7 +82,7 @@
   line-height: 1em;
   position: fixed;
   left: 50%;
-  top: 50%;
+  top: 60%;
   transform: translate(-50%, -50%);
   height: 1.8em;
   margin-right: .8em;

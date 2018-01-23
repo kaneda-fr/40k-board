@@ -40,8 +40,11 @@
 	    		Login
 	  		</button>
 	</div>
-	<div *ngIf="isLoggedIn" style="text-align:center">
- 		<app-admin joueur={{joueur}} accessToken={{accessToken}} userId={{userId}} isAdmin={{isAdmin}}></app-admin>
+	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown')" style="text-align:center">
+ 		<app-admin joueur={{joueur}} isAdmin={{isAdmin}} isActif={{isActif}}></app-admin>
+	</div>
+	<div *ngIf="(isLoggedIn) && (joueur === 'unknown')" style="text-align:center">
+ 		<app-creejoueur fbName={{fbName}} userId={{userId}} (joueurModifie)="miseajour($event)"></app-creejoueur>
 	</div>
 
 	</mat-tab>

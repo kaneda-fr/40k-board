@@ -22,6 +22,6 @@ export class MatchComponent implements OnChanges {
 
    getMatch(nom?: string): void {
     this.apiService.matchjoueurNomGET(nom)
-     .subscribe(match => this.matches = match);
+     .subscribe(match => this.matches = match.length === undefined ? [] : match);
   }
 }

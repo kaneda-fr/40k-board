@@ -1,12 +1,12 @@
-<p>Vous etes connectes en tant que {{nomJoueur}}
-<span *ngIf="isAdmin">(admin)</span>
+<p>Vous êtes connecté en tant que {{nomJoueur}}
+<span *ngIf="(isAdmin == 'true')">(admin)</span>
 </p>
-<p *ngIf="!isAdmin">Admin Page is coming soon</p>
+<p *ngIf="isActif != 'true'">Compte désactivé, contactez un admin du site ou de l'assoce.</p>
 
-
+<div *ngIf="isActif == 'true'">
 <form [formGroup]="partie" (ngSubmit)="onSubmit()" #MatchForm="ngForm">
 <div class="entree-match">
-	  <h3>Details de la partie</h3>
+	  <h3>Détails de la partie</h3>
 	  <mat-form-field>
 		  <input matInput [matDatepicker]="datepicker" [formControl]="partie.get('date')" [(ngModel)]="match.date" placeholder="Date de la partie" required>
 		  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
@@ -107,26 +107,26 @@
   </tr>
   <tr>
   <td>Briseur de ligne</td>
-  <td><mat-checkbox></mat-checkbox></td>
-  <td><mat-checkbox></mat-checkbox></td>
+  <td><mat-checkbox [(ngModel)]="briseurdeligne1" [formControl]="partie.get('briseurdeligne1')" (ngModelChange)="updateCheckedOptions('joueur1', 'briseurdeligne', 'briseurdeligne2', $event)"></mat-checkbox></td>
+  <td><mat-checkbox [(ngModel)]="briseurdeligne2" [formControl]="partie.get('briseurdeligne2')" (ngModelChange)="updateCheckedOptions('joueur2', 'briseurdeligne', 'briseurdeligne1', $event)"></mat-checkbox></td>
   </tr>
     <tr>
-  <td>Premier Sang</td>
-  <td><mat-checkbox></mat-checkbox></td>
-  <td><mat-checkbox></mat-checkbox></td>
+	  <td>Premier Sang</td>
+	  <td><mat-checkbox [(ngModel)]="premiersang1" [formControl]="partie.get('premiersang1')" (ngModelChange)="updateCheckedOptions('joueur1', 'premiersang', 'premiersang2', $event)"></mat-checkbox></td>
+	  <td><mat-checkbox [(ngModel)]="premiersang2" [formControl]="partie.get('premiersang2')" (ngModelChange)="updateCheckedOptions('joueur2', 'premiersang', 'premiersang1', $event)"></mat-checkbox></td>
   </tr>
     <tr>
   <td>Seigneur de Guerre</td>
-  <td><mat-checkbox></mat-checkbox></td>
-  <td><mat-checkbox></mat-checkbox></td>
-  </tr>
+ 	  <td><mat-checkbox [(ngModel)]="seigneurguerre1" [formControl]="partie.get('seigneurguerre1')" (ngModelChange)="updateCheckedOptions('joueur1', 'seigneurguerre', 'seigneurguerre2', $event)"></mat-checkbox></td>
+	 <td><mat-checkbox [(ngModel)]="seigneurguerre2" [formControl]="partie.get('seigneurguerre2')" (ngModelChange)="updateCheckedOptions('joueur2', 'seigneurguerre', 'seigneurguerre1', $event)"></mat-checkbox></td>
+   </tr>
   </table>
 </div>
 <div style="margin-bottom: 1em">
-	<button mat-raised-button 
+	<!-- <button mat-raised-button 
 	[disabled]="partie.pristine || partie.invalid"  
 	(click)="onSubmit()" class="btn btn-success">Enregistrer</button>
-    <!--  <button type="submit"
+		<button type="submit"
             [disabled]="partie.pristine || partie.invalid" class="btn btn-success">Save</button> &nbsp;  -->
      <button type="submit"
             [disabled]="partie.pristine || partie.invalid" class="btn btn-success">Enregistrer</button> &nbsp;      
@@ -134,3 +134,4 @@
             [disabled]="partie.pristine" class="btn btn-danger">Nouvelle Partie</button>
   </div>
 </form>
+</div>

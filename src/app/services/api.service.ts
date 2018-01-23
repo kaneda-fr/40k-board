@@ -150,14 +150,12 @@ export class ApiService extends BaseService {
 
   /**
    * return list of all players
-   * @param X-FB-API-Key FB token
    * @return show all player
    */
-   joueursGETResponse(XFBAPIKey: string): Observable<HttpResponse<string[]>> {
+   joueursGETResponse(): Observable<HttpResponse<string[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    if (XFBAPIKey != null) __params = __params.set("X-FB-API-Key", XFBAPIKey.toString());
     let req = new HttpRequest<any>(
       "GET",
       this.rootUrl + `/joueurs`,
@@ -181,11 +179,10 @@ export class ApiService extends BaseService {
 
   /**
    * return list of all players
-   * @param X-FB-API-Key FB token
    * @return show all player
    */
-   joueursGET(XFBAPIKey: string): Observable<string[]> {
-    return this.joueursGETResponse(XFBAPIKey).pipe(
+   joueursGET(): Observable<string[]> {
+    return this.joueursGETResponse().pipe(
       map(_r => _r.body)
     );
   }
