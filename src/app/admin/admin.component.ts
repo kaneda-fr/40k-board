@@ -78,6 +78,43 @@ export class AdminComponent implements OnChanges, OnInit {
     return this.joueurFormGroupAtIndex(index).controls[control] as FormControl;
   }
 
+  ajouteJoueur() {
+    const index = this.match.joueurs.length;
+
+    this.match.joueurs.push(
+      {
+        nom: '',
+        armee: '',
+        points: this.match.points,
+        score: 0,
+      }
+    );
+
+   this.joueurFormGroup.push(
+     new FormGroup({
+       points: new FormControl(
+         this.match.points,
+         [Validators.min(1), this.validateMaxPoints.bind(this)]
+       ),
+       nom: new FormControl(),
+       score:  new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
+       vainqueur: new FormControl(),
+       tablerase: new FormControl(),
+       abandon: new FormControl(),
+       briseurdeligne: new FormControl(),
+       premiersang: new FormControl(),
+       seigneurdeguerre: new FormControl(),
+     })
+   );
+
+  this.joueurFormGroupAtIndex(index).get('nom').valueChanges.subscribe(
+    value => {
+      this.getJoueur(index, value);
+    }
+  );
+
+  }
+
   ngOnInit() {
     this.match = {
       dateentree: moment().format(),
@@ -85,20 +122,7 @@ export class AdminComponent implements OnChanges, OnInit {
       date: moment().format(),
       derniertour: 5,
       points: 1000,
-      joueurs: [
-      {
-        nom: '',
-        armee: '',
-        points: 1000,
-        score: 0,
-      },
-        {
-        nom: '',
-        armee: '',
-        points: 1000,
-        score: 0,
-        }
-      ]
+      joueurs: []
     };
 
     this.partieFormGroup = new FormGroup ({
@@ -111,26 +135,10 @@ export class AdminComponent implements OnChanges, OnInit {
       // joueur:  this.formBuilder.array([]),
     });
 
-    for (const i of Object.keys(this.match.joueurs)) {
-       this.joueurFormGroup.push(
-         new FormGroup({
-           points: new FormControl(this.match.joueurs[i].points, [Validators.min(1), this.validateMaxPoints.bind(this)]),
-           nom: new FormControl(),
-           score:  new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
-           vainqueur: new FormControl(),
-           tablerase: new FormControl(),
-           abandon: new FormControl(),
-           briseurdeligne: new FormControl(),
-           premiersang: new FormControl(),
-           seigneurdeguerre: new FormControl(),
-         })
-       );
-
-      this.joueurFormGroupAtIndex(+i).get('nom').valueChanges.subscribe(
-        value => {
-          this.getJoueur(+i, value);
-        }
-      );
+    if (this.match.joueurs.length === 0) {
+      for (const i of [1, 2]){
+        this.ajouteJoueur();
+      }
     }
 
     this.partieFormGroup.controls['points'].valueChanges.subscribe(
@@ -165,9 +173,10 @@ export class AdminComponent implements OnChanges, OnInit {
         startWith(''),
         map(item => item ? this.filtereListeType(item) : this.listeType.slice())
       );
+
       this.joueurFormGroupAtIndex(0).controls['nom'].setValue(this.joueur);
-      this.match.joueurs[0].nom = this.joueur;
-      this.joueurFormGroupAtIndex(0).updateValueAndValidity();
+      // this.match.joueurs[0].nom = this.joueur;
+      // this.joueurFormGroupAtIndex(0).updateValueAndValidity();
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
