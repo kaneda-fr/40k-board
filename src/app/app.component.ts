@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     const fbAppId = environment.fbAppId;
 
     console.log('fbAppId: ' + fbAppId );
-     /* 
+     /*
     if (isDevMode()) {
       console.log('FB will be initialized for Dev Mode');
       fbAppId = '638322569876518';
@@ -80,13 +80,15 @@ export class AppComponent implements OnInit {
           console.log(res.authResponse.userID + ' -- ' + res.authResponse.accessToken);
           this.fbToken = res.authResponse.accessToken;
           this.userId = res.authResponse.userID;
+          // registering token with AuthService
+          this.authService.setToken(this.userId, this.fbToken);
+
           this.getjoueurfb(this.userId);
         } else {
           this.isLoggedIn = false;
         }
         console.log('Logged in', res);
-        // registering token with AuthService
-        this.authService.setToken(this.userId, this.fbToken);
+
 
         this.getProfile();
       })

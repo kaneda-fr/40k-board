@@ -3,6 +3,10 @@
 	padding: 5px;
 	border-radius: 20px 20px 20px 20px;
 	overflow:hidden;
+	max-width: 900px;
+	margin-right: auto; 
+	margin-left: auto;
+	
 }
 
 .btn-successX:disabled {

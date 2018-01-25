@@ -2,9 +2,9 @@
 
 export interface Error {
 
-  code?: number;
+  code: number;
 
-  message?: string;
+  message: string;
 
   fields?: string;
 }

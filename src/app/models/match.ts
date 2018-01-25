@@ -1,21 +1,22 @@
 /* tslint:disable */
-import { joueur } from './joueur';
+import { matchDetailJoueur } from './match-detail-joueur';
 
 export interface match {
 
   /**
-   * score du vainqueur
+   * nombre de points de la partie
    */
-   scorevainqueur?: number;
+   points?: number;
 
   /**
    * Id du match
    */
    id?: string;
 
-  vainqueur?: joueur;
-
-  perdant?: joueur;
+  /**
+   * Date du match
+   */
+   date: string;
 
   /**
    * format de la partie
@@ -33,9 +34,9 @@ export interface match {
    scenario?: string;
 
   /**
-   * nombre de points de la partie
+   * Nom du tournoi
    */
-   points?: number;
+   tournoi?: string;
 
   /**
    * nombre de PL de la partie
@@ -43,47 +44,19 @@ export interface match {
    powerlevel?: number;
 
   /**
-   * Date du match
-   */
-   date?: string;
-
-  /**
-   * score du perdant
-   */
-   scoreperdant?: number;
-
-  /**
-   * Joueur ayant score briseur de ligne
-   */
-   briseurligne?: string;
-
-  /**
-   * Joueur ayant score premier sang
-   */
-   premiersang?: string;
-
-  /**
-   * Joueur ayant score seigneur de guerre
-   */
-   seigneurguerre?: string;
-
-  /**
-   * la partie se termine par table rase
-   */
-   tablerase?: boolean;
-
-  /**
    * numero du dernier tour
    */
-   derniertour?: number;
+   derniertour: number;
 
   /**
    * nom du joueur qui a entre le match
    */
-   joueurentree?: string;
+   joueurentree: string;
 
   /**
    * Date d'entree du match
    */
-   dateentree?: string;
+   dateentree: string;
+
+  joueurs?: matchDetailJoueur[];
 }

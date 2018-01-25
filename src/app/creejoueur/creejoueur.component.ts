@@ -29,7 +29,10 @@ export class CreejoueurComponent implements OnInit {
   constructor(private apiService: ApiService, public snackBar: MatSnackBar  ) { }
 
   ngOnInit() {
-    this.joueur = {};
+    this.joueur = {
+    nom: '',
+    armee: '',
+    };
 
     this.joueurForm = new FormGroup ({
       points: new FormControl(1000, [Validators.min(1), Validators.required]),
@@ -50,7 +53,7 @@ export class CreejoueurComponent implements OnInit {
 
   saveJoueur(joueur: joueur): void {
     console.log('Enregistrement joueur');
-     this.apiService.joueurPUT(joueur)
+     this.apiService.joueurPUT({nom: joueur.nom, joueur: joueur})
      .subscribe(joueur => {
        console.log('Joueur enregistré');
        console.log(JSON.stringify(joueur));

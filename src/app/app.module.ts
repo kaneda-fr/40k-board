@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { MatchComponent } from './match/match.component';
@@ -48,6 +49,7 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    CommonModule,
     ApiModule,
     AuthModule,
     MaterialModule,

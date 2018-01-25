@@ -1,16 +1,16 @@
-<div *ngIf="(matches !== undefined) && (matches.length > 0)">
+<div *ngIf="(matches !== undefined) && (matches.length > 0)" class="show-match">
   <table>
   <tbody>
     <tr><th>Date</th><th>Vainqueur</th><th>Perdant</th></tr>
     <tr *ngFor="let match of matches">
        <td>{{match.date | date}}</td>
        <td><table>
-       	<tr><td>{{match.vainqueur[0].nom}}</td></tr>
-       	<tr><td>{{match.vainqueur[0].armee}}</td></tr>
+       	<tr><td><span *ngIf="match.joueurs[0].vainqueur">V </span>{{match.joueurs[0].nom}}</td></tr>
+       	<tr><td>{{match.joueurs[0].armee}}</td></tr>
        </table></td>
        <td><table>
-       	<tr><td>{{match.perdant[0].nom}}</td></tr>
-       	<tr><td>{{match.perdant[0].armee}}</td></tr>
+       	<tr><td><span *ngIf="match.joueurs[1].vainqueur">V </span>{{match.joueurs[1].nom}}</td></tr>
+       	<tr><td>{{match.joueurs[1].armee}}}</td></tr>
        </table></td>
      </tr>
   </tbody>

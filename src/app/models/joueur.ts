@@ -10,7 +10,7 @@ export interface joueur {
   /**
    * Nom du Joueur
    */
-   nom?: string;
+   nom: string;
 
   /**
    * classement du joueur
@@ -30,7 +30,7 @@ export interface joueur {
   /**
    * Armee principale du joueur
    */
-   armee?: string;
+   armee: string;
 
   /**
    * indique si le compte est actif

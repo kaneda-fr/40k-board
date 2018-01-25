@@ -65,7 +65,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return a player by id
+   * retourne un joueur par id
    * @param nom nom du joueur
    * @return show one player
    */
@@ -96,7 +96,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return a player by id
+   * retourne un joueur par id
    * @param nom nom du joueur
    * @return show one player
    */
@@ -108,17 +108,23 @@ export class ApiService extends BaseService {
 
   /**
    * Enregistre ou met à jour un joueur
-   * @param joueur details du joueur
+   * @param params The `ApiService.JoueurPUTParams` containing the following parameters:
+   *
+   * - `nom`: nom du joueur
+   *
+   * - `joueur`: details du joueur
+   *
    * @return show one player
    */
-   joueurPUTResponse(joueur: joueur): Observable<HttpResponse<joueur>> {
+   joueurPUTResponse(params: ApiService.JoueurPUTParams): Observable<HttpResponse<joueur>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = joueur;
+
+    __body = params.joueur;
     let req = new HttpRequest<any>(
       "PUT",
-      this.rootUrl + `/joueur`,
+      this.rootUrl + `/joueur/${params.nom}`,
       __body,
       {
         headers: __headers,
@@ -139,17 +145,62 @@ export class ApiService extends BaseService {
 
   /**
    * Enregistre ou met à jour un joueur
-   * @param joueur details du joueur
+   * @param params The `ApiService.JoueurPUTParams` containing the following parameters:
+   *
+   * - `nom`: nom du joueur
+   *
+   * - `joueur`: details du joueur
+   *
    * @return show one player
    */
-   joueurPUT(joueur: joueur): Observable<joueur> {
-    return this.joueurPUTResponse(joueur).pipe(
+   joueurPUT(params: ApiService.JoueurPUTParams): Observable<joueur> {
+    return this.joueurPUTResponse(params).pipe(
       map(_r => _r.body)
     );
   }
 
   /**
-   * return list of all players
+   * Enregistre ou met à jour un joueur
+   * @param nom nom du joueur
+   */
+   joueurDELResponse(nom: string): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "DELETE",
+      this.rootUrl + `/joueur/${nom}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Enregistre ou met à jour un joueur
+   * @param nom nom du joueur
+   */
+   joueurDEL(nom: string): Observable<void> {
+    return this.joueurDELResponse(nom).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * retourne la liste des joueurs
    * @return show all player
    */
    joueursGETResponse(): Observable<HttpResponse<string[]>> {
@@ -178,7 +229,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return list of all players
+   * retourne la liste des joueurs
    * @return show all player
    */
    joueursGET(): Observable<string[]> {
@@ -188,7 +239,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return a player by fb userid
+   * retourne la liste des joueurs par fb userid
    * @param userid userid FB du joueur
    * @return show one player
    */
@@ -219,7 +270,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return a player by fb userid
+   * retourne la liste des joueurs par fb userid
    * @param userid userid FB du joueur
    * @return show one player
    */
@@ -230,8 +281,8 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return list of match
-   * @return list des matchs
+   * retourne la liste de tous les matchs
+   * @return liste des matchs
    */
    matchGETResponse(): Observable<HttpResponse<match[]>> {
     let __params = this.newParams();
@@ -259,8 +310,8 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return list of match
-   * @return list des matchs
+   * retourne la liste de tous les matchs
+   * @return liste des matchs
    */
    matchGET(): Observable<match[]> {
     return this.matchGETResponse().pipe(
@@ -269,7 +320,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * record a match
+   * enregistre un match
    * @param match details de la partie
    * @return retourne le match
    */
@@ -300,7 +351,7 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * record a match
+   * enregistre un match
    * @param match details de la partie
    * @return retourne le match
    */
@@ -311,18 +362,113 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return list of match for a player
-   * @param nom nom du joueur
-   * @return liste des match
+   * retourne un match
+   * @param id Id de la partie
+   * @return list des matchs
    */
-   matchjoueurNomGETResponse(nom: string): Observable<HttpResponse<match[]>> {
+   matchIdGETResponse(id: string): Observable<HttpResponse<match>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     let req = new HttpRequest<any>(
       "GET",
-      this.rootUrl + `/matchjoueur/${nom}`,
+      this.rootUrl + `/match/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: match = null;
+        _body = _resp.body as match
+        return _resp.clone({body: _body}) as HttpResponse<match>;
+      })
+    );
+  }
+
+  /**
+   * retourne un match
+   * @param id Id de la partie
+   * @return list des matchs
+   */
+   matchIdGET(id: string): Observable<match> {
+    return this.matchIdGETResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * met a jour les données d'un match
+   * @param params The `ApiService.MatchIdPUTParams` containing the following parameters:
+   *
+   * - `match`: details de la partie
+   *
+   * - `id`: Id de la partie
+   *
+   * @return retourne le match
+   */
+   matchIdPUTResponse(params: ApiService.MatchIdPUTParams): Observable<HttpResponse<match>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = params.match;
+
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `/match/${params.id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: match = null;
+        _body = _resp.body as match
+        return _resp.clone({body: _body}) as HttpResponse<match>;
+      })
+    );
+  }
+
+  /**
+   * met a jour les données d'un match
+   * @param params The `ApiService.MatchIdPUTParams` containing the following parameters:
+   *
+   * - `match`: details de la partie
+   *
+   * - `id`: Id de la partie
+   *
+   * @return retourne le match
+   */
+   matchIdPUT(params: ApiService.MatchIdPUTParams): Observable<match> {
+    return this.matchIdPUTResponse(params).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * Liste de match joués par un joueur
+   * @param nom nom du joueur
+   * @return liste des match
+   */
+   matchJoueurNomGETResponse(nom: string): Observable<HttpResponse<match[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `/matchJoueur/${nom}`,
       __body,
       {
         headers: __headers,
@@ -342,16 +488,48 @@ export class ApiService extends BaseService {
   }
 
   /**
-   * return list of match for a player
+   * Liste de match joués par un joueur
    * @param nom nom du joueur
    * @return liste des match
    */
-   matchjoueurNomGET(nom: string): Observable<match[]> {
-    return this.matchjoueurNomGETResponse(nom).pipe(
+   matchJoueurNomGET(nom: string): Observable<match[]> {
+    return this.matchJoueurNomGETResponse(nom).pipe(
       map(_r => _r.body)
     );
   }
 }
 
 export module ApiService {
+
+  /**
+   * Parameters for joueurPUT
+   */
+   export interface JoueurPUTParams {
+
+    /**
+     * nom du joueur
+     */
+     nom: string;
+
+    /**
+     * details du joueur
+     */
+     joueur: joueur;
+  }
+
+  /**
+   * Parameters for matchIdPUT
+   */
+   export interface MatchIdPUTParams {
+
+    /**
+     * details de la partie
+     */
+     match: match;
+
+    /**
+     * Id de la partie
+     */
+     id: string;
+  }
 }

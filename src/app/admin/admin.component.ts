@@ -1,5 +1,5 @@
 import { Component, OnInit, Input,  OnChanges, SimpleChange } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatFormFieldModule, MatSnackBar } from '@angular/material';
@@ -30,22 +30,6 @@ export class AdminComponent implements OnChanges, OnInit {
   @Input() @converter.InputConverter(converter.BooleanConverter)  isActif = false;
   nomJoueur: string;
   listeJoueurs: string[];
-  picker1: string;
-  heurePartie: number;
-  minutesPartie: number;
-  scoreJ1: number;
-  scoreJ2: number;
-  vainqueur: string;
-
-  briseurdeligne1 = false;
-  briseurdeligne2 = false;
-  premiersang1 = false;
-  premiersang2 = false;
-  seigneurguerre1 = false;
-  seigneurguerre2 = false;
-  briseurdeligne: string;
-  premiersang: string;
-  seigneurguerre: string;
 
   listeArmees =  ['Adeptus Custodes', 'Adeptus Mechanicus', 'Adeptus Ministorum', 'Astra Militarum',
     'Blood Angels', 'Chaos Daemons', 'Chaos Space Marines', 'Craftworlds', 'Dark Angels',
@@ -76,75 +60,99 @@ export class AdminComponent implements OnChanges, OnInit {
     ];
 
   match: match;
-  joueur1: joueur;
-  joueur2: joueur;
-  partie: FormGroup;
+  /*joueur1: joueur;
+  joueur2: joueur;*/
+  partieFormGroup: FormGroup;
+
+  // joueurFormGroup: FormGroup[];
   filteredListeType: Observable<any[]>;
 
   // constructor(private apiService: ApiService, private match: match, private joueur1: match, private joueur2: match) { }
-  constructor(private apiService: ApiService, public snackBar: MatSnackBar) { }
+  constructor(private apiService: ApiService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
+
+  get joueurFormGroup(): FormArray { return this.partieFormGroup.get('joueur') as FormArray; }
+
+  joueurFormGroupAtIndex(index: number): FormGroup { return this.joueurFormGroup.at(index) as FormGroup; }
+
+  joueurFormControl(index: number, control: string): FormControl {
+    return this.joueurFormGroupAtIndex(index).controls[control] as FormControl;
+  }
 
   ngOnInit() {
-    this.match = {};
-    this.joueur1 = {};
-    this.getJoueur('joueur1', this.nomJoueur);
-    this.joueur2 = {};
-    this.joueur1.points = this.joueur2.points = this.match.points = 1000;
-    this.match.date = moment().format();
-    this.heurePartie = 1 ;
-    this.minutesPartie = 1;
-    this.scoreJ1 = this.scoreJ2 = 0;
-    this.match.joueurentree = this.joueur;
-    this.match.dateentree = moment().format();
-    this.briseurdeligne = undefined;
-    this.premiersang = undefined;
-    this.seigneurguerre = undefined;
-    this.vainqueur = 'joueur1';
+    this.match = {
+      dateentree: moment().format(),
+      joueurentree: this.nomJoueur,
+      date: moment().format(),
+      derniertour: 5,
+      points: 1000,
+      joueurs: [
+      {
+        nom: '',
+        armee: '',
+        points: 1000,
+        score: 0,
+      },
+        {
+        nom: '',
+        armee: '',
+        points: 1000,
+        score: 0,
+        }
+      ]
+    };
 
-    this.partie = new FormGroup ({
+    this.partieFormGroup = new FormGroup ({
       points: new FormControl(this.match.points, [Validators.min(1)]),
-      pointsJ1: new FormControl(this.match.points, [Validators.min(1), this.validateMaxPoints.bind(this)]),
-      pointsJ2: new FormControl(this.match.points, [Validators.min(1), this.validateMaxPoints.bind(this)]),
-      nomJ1: new FormControl(this.nomJoueur),
-      nomJ2: new FormControl(),
       date: new FormControl(null, Validators.required),
-      scoreJ1: new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
-      scoreJ2: new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
-      vainqueur: new FormControl('joueur1', [this.validateVainqueur.bind(this)]),
       derniertour: new FormControl(5, [Validators.required]),
-      tablerase: new FormControl(0),
       type: new FormControl(),
       scenario: new FormControl(),
-      briseurdeligne1: new FormControl(),
-      briseurdeligne2: new FormControl(),
-      premiersang1: new FormControl(),
-      premiersang2: new FormControl(),
-      seigneurguerre1: new FormControl(),
-      seigneurguerre2: new FormControl(),
+      joueur: new FormArray([]),
+      // joueur:  this.formBuilder.array([]),
     });
 
-    this.partie.controls['points'].valueChanges.subscribe(
+    for (const i of Object.keys(this.match.joueurs)) {
+       this.joueurFormGroup.push(
+         new FormGroup({
+           points: new FormControl(this.match.joueurs[i].points, [Validators.min(1), this.validateMaxPoints.bind(this)]),
+           nom: new FormControl(),
+           score:  new FormControl(0, [Validators.required, Validators.min(0),  Validators.pattern('[0-9]+')]),
+           vainqueur: new FormControl(),
+           tablerase: new FormControl(),
+           abandon: new FormControl(),
+           briseurdeligne: new FormControl(),
+           premiersang: new FormControl(),
+           seigneurdeguerre: new FormControl(),
+         })
+       );
+
+      this.joueurFormGroupAtIndex(+i).get('nom').valueChanges.subscribe(
+        value => {
+          this.getJoueur(+i, value);
+        }
+      );
+    }
+
+    this.partieFormGroup.controls['points'].valueChanges.subscribe(
       value => {
-        this.partie.controls['pointsJ1'].markAsTouched();
-        this.partie.controls['pointsJ1'].updateValueAndValidity();
-        this.partie.controls['pointsJ2'].markAsTouched();
-        this.partie.controls['pointsJ2'].updateValueAndValidity();
+        this.match.joueurs.forEach(function(joueur, index) {
+          this.joueurFormGroup.at(index).controls['points'].markAsTouched();
+          this.joueurFormGroup.at(index).controls['points'].updateValueAndValidity();
+        }, this);
       }
     );
 
-   this.partie.controls['scenario'].valueChanges.subscribe(
+   this.partieFormGroup.controls['scenario'].valueChanges.subscribe(
       value => {
-        console.log('Scenario selectionne: ' + value);
         if (value === undefined) {
-          this.match.type = undefined;
+          this.partieFormGroup.controls['type'].setValue(undefined);
           return;
          }
         for (const item of this.listeType){
           for (const scenario of item.scenario){
             if (scenario === value) {
-             console.log(item.type);
-              this.match.type = item.type;
-              this.partie.controls['type'].updateValueAndValidity();
+              // this.match.type = item.type;
+              this.partieFormGroup.controls['type'].setValue(item.type);
               return; // Exit as soon as we found a matching entry
             }
           }
@@ -152,72 +160,20 @@ export class AdminComponent implements OnChanges, OnInit {
      }
     );
 
-    this.partie.controls['nomJ1'].valueChanges.subscribe(
-      value => {
-        this.getJoueur('joueur1', value);
-      }
-    );
-
-    this.partie.controls['nomJ2'].valueChanges.subscribe(
-      value => {
-        this.getJoueur('joueur2', value);
-      }
-    );
-
-    this.partie.controls['scoreJ1'].valueChanges.subscribe(
-      value => {
-        if (! this.match.tablerase) {
-          if (this.scoreJ1 >= this.scoreJ2) {
-            this.vainqueur = 'joueur1';
-          } else {
-            this.vainqueur = 'joueur2';
-          }
-        }
-      }
-    );
-
-    this.partie.controls['scoreJ2'].valueChanges.subscribe(
-      value => {
-        if (! this.match.tablerase) {
-          if (this.scoreJ1 >= this.scoreJ2) {
-            this.vainqueur = 'joueur1';
-          } else {
-            this.vainqueur = 'joueur2';
-          }
-        }
-      }
-    );
-
-    this.partie.controls['tablerase'].valueChanges.subscribe(
-      value => {
-        if (! value) {
-          if (this.scoreJ1 >= this.scoreJ2) {
-            this.vainqueur = 'joueur1';
-          } else {
-            this.vainqueur = 'joueur2';
-          }
-        }
-      }
-    );
-
-
-    this.partie.controls['points'].markAsTouched();
-    this.partie.controls['points'].updateValueAndValidity();
-
-
-    this.filteredListeType = this.partie.controls['type'].valueChanges
+    this.filteredListeType = this.partieFormGroup.controls['type'].valueChanges
       .pipe(
         startWith(''),
         map(item => item ? this.filtereListeType(item) : this.listeType.slice())
       );
+      this.joueurFormGroupAtIndex(0).controls['nom'].setValue(this.joueur);
+      this.match.joueurs[0].nom = this.joueur;
+      this.joueurFormGroupAtIndex(0).updateValueAndValidity();
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-    console.log('Is Admin: ' + this.isAdmin);
     const joueur = changes['joueur'];
     console.log('user logged in: ' + joueur.currentValue);
     this.nomJoueur = joueur.currentValue;
-    // this.apiService.joueursGET(this.accessToken)
     this.apiService.joueursGET()
       .subscribe(joueurs => this.listeJoueurs = joueurs);
   }
@@ -233,54 +189,25 @@ export class AdminComponent implements OnChanges, OnInit {
       };
   }
 
-   validateVainqueur(c: FormControl): { [key: string]: boolean } {
-     return null;
-   }
-
-  getPointsErrorMessage(joueur: string) {
-    if (!joueur.localeCompare('J1')) {
-      if (this.partie.get('pointsJ1').value < 1 ) {
-        return 'le nombre de points doit etre superieur a 0';
-      } else {
-        return 'le nombre de points doit etre inferieur a ' + this.partie.get('points').value;
-      }
-    } else {
-      if (this.partie.get('pointsJ2').value < 1 ) {
-        return 'le nombre de points doit etre superieur a 0';
-      } else {
-        return 'le nombre de points doit etre inferieur a ' + this.partie.get('points').value;
-      }
+  getPointsErrorMessage(index: number) {
+  if (this.joueurFormGroupAtIndex(index).get('points').value < 1 ) {
+     return 'le nombre de points doit etre superieur a 0';
+  } else {
+      return 'le nombre de points doit etre inferieur a ' + this.partieFormGroup.get('points').value;
     }
-
-    /*return this.email.hasError('required') ? 'You must enter a value' :
-        this.email.hasError('email') ? 'Not a valid email' :
-            '';*/
   }
 
   onSubmit() {
-    this.partie.controls['date'].updateValueAndValidity();
-    console.log('pristine; ' + this.partie.pristine);
-    if (this.partie.invalid) {
+    console.log(this.partieFormGroup.value);
+    console.log(this.match);
+    this.partieFormGroup.updateValueAndValidity();
+    console.log('pristine; ' + this.partieFormGroup.pristine);
+    if (this.partieFormGroup.invalid) {
       console.log('form is invalid');
       return;
     }
     this.openSnackBar('Sauvegarde de la partie en cours', '👾');
 
-    // console.log(JSON.stringify(this.joueur1));
-    // console.log(JSON.stringify(this.joueur2));
-    if (this.vainqueur === 'joueur1') {
-      this.match.vainqueur = this.joueur1;
-      this.match.perdant = this.joueur2;
-    } else {
-      this.match.vainqueur = this.joueur2;
-      this.match.perdant = this.joueur1;
-    }
-
-    this.match.briseurligne = (this.briseurdeligne === undefined) ?  undefined : this[this.briseurdeligne].nom;
-    this.match.seigneurguerre = (this.seigneurguerre  === undefined) ?  undefined : this[this.seigneurguerre].nom;
-    this.match.premiersang = (this.premiersang  === undefined) ?  undefined : this[this.premiersang].nom;
-
-    console.log('Vainqueur: ' + JSON.stringify(this.vainqueur));
     console.log(JSON.stringify(this.match));
 
     this.saveMatch(this.match);
@@ -307,31 +234,54 @@ export class AdminComponent implements OnChanges, OnInit {
      });
   }
 
-  getJoueur(joueurSelect: string, nom: string): void {
-    console.log('Loading ' + joueurSelect + ' ' + nom);
+  getJoueur(index: number, nom: string): void {
+    console.log('Loading joueur ' + nom);
      this.apiService.joueurNomGET(nom)
      .subscribe(joueur => {
-       this[joueurSelect] = joueur;
-       this[joueurSelect].points = this.match.points;
+       this.match.joueurs[index].nom = joueur.nom;
+       this.match.joueurs[index].armee = joueur.armee;
+       this.match.joueurs[index].points = this.match.points;
      });
   }
 
-  updateCheckedOptions(joueur: string, item: string, model: string, event) {
-    console.log('joueur: ' + joueur + ' - ' + item + ' ' + event);
-    // console.log(JSON.stringify(item));
+  updateUniqueCheckedOptions(index: number, property: string, event) {
     if (event) {
-      this[item] = joueur;
-      // this[model] = false;
-      // console.log(nom + ' ' + item + ' ' + model + ' ' + event);
-      // console.log(this[model]);
-      if (this[model]) {
-        this[model] = false;
-      }
-    } else {
-      if (this[item] === joueur) {
-        this[item] = undefined;
-      }
+      this.match.joueurs.forEach(function(joueur, i) {
+        if (i !== index) {
+          this.joueurFormGroupAtIndex(i).controls[property].setValue(false);
+        }
+        if (property === 'vainqueur' && index === i) {
+          this.joueurFormGroupAtIndex(i).controls['abandon'].setValue(false);
+        }
+        if (property === 'vainqueur' && index !== i) {
+          this.joueurFormGroupAtIndex(i).controls['tablerase'].setValue(false);
+        }
+        if (property === 'tablerase' && joueur.abandon === true) {
+           this.joueurFormGroupAtIndex(i).controls['abandon'].setValue(false);
+        }
+        if (property === 'abandon' && index !== i) {
+           this.joueurFormGroupAtIndex(i).controls['vainqueur'].setValue(true);
+        }
+        if (property === 'tablerase' && index === i) {
+          this.joueurFormGroupAtIndex(i).controls['vainqueur'].setValue(true);
+        }
+        if (property === 'abandon') {
+          this.joueurFormGroupAtIndex(i).controls['tablerase'].setValue(false);
+        }
+
+      }, this);
     }
+  }
+
+  checkNomUsed(nom: string, index: number): boolean {
+    let i = 0;
+    for (const joueur of this.match.joueurs){
+      if (joueur.nom === nom) {
+        return i === index ? false : true;
+      }
+      i++;
+    }
+    return false;
   }
 
   openSnackBar(message: string, action: string) {
