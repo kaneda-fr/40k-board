@@ -2,7 +2,7 @@
   <h2>{{matches.length}} Matchs joués</h2>
   <mat-grid-list cols="5" rowHeight="60px">
 	  <ng-container *ngFor="let match of matches">
-	  		<mat-grid-tile [colspan]=1 [rowspan]=1>{{match.date | date}}</mat-grid-tile>
+	  		<mat-grid-tile [colspan]=1 [rowspan]=1>{{match.date | date:'EEE dd/MMM/yyyy'}}</mat-grid-tile>
 		  <mat-grid-tile [colspan]=1 [rowspan]=1><img class="victory" *ngIf="match.joueurs[0].vainqueur === true" src="assets/victory.png"></mat-grid-tile>
 		  <mat-grid-tile [colspan]=1 [rowspan]=1>{{match.joueurs[0].nom}}<BR>{{match.joueurs[0].armee}}</mat-grid-tile>
 		  <mat-grid-tile [colspan]=1 [rowspan]=1>{{match.joueurs[1].nom}}<BR>{{match.joueurs[1].armee}}</mat-grid-tile>

@@ -2,7 +2,11 @@ import '../polyfills';
 import 'hammerjs';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
+
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -32,6 +36,7 @@ import { AdminComponent } from './admin/admin.component';
 import {APIAuthInterceptor} from './apiauth.interceptor';
 import { CreejoueurComponent } from './creejoueur/creejoueur.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,10 +64,14 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
     provide: HTTP_INTERCEPTORS,
     useClass: APIAuthInterceptor,
     multi: true,
-  }],
+  },
+  {
+       provide: LOCALE_ID, useValue: 'fr',
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 
+registerLocaleData(localeFr, 'fr');
 
 platformBrowserDynamic().bootstrapModule(AppModule);
