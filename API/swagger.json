@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "API for 40k ranking",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "title": "40k API"
   },
   "host": "hackedo.io",
@@ -58,6 +58,23 @@
           }
         },
         "x-swagger-router-controller": "40k"
+      },
+      "put": {
+        "summary": "calcule le classement",
+        "description": "calcule le classement",
+        "operationId": "classementPUT",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "default": {
+            "description": "Return operation message",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "x-swagger-router-controller": "40k"
       }
     },
     "/joueur/{nom}": {
@@ -90,7 +107,8 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "x-swagger-router-controller": "40k"
       },
       "put": {
         "summary": "met a jour un joueur",
@@ -135,7 +153,8 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "x-swagger-router-controller": "40k"
       },
       "delete": {
         "summary": "supprime un joueur",
