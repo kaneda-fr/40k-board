@@ -1,13 +1,16 @@
 <div class="classement">
 <mat-accordion>
-	 <mat-expansion-panel (opened)="selectedJoueur=joueur"
-                       *ngFor="let joueur of classement">
+	 <mat-expansion-panel
+	 	[expanded]="selectedJoueur === joueur"
+	 	(opened)="onSelect(joueur)"
+	 	hideToggle="true"
+        *ngFor="let joueur of classement">
      <mat-expansion-panel-header>
       <mat-panel-title>
         {{joueur.classement}}
       </mat-panel-title>
       <mat-panel-description>
-        {{joueur.nom}}
+        <div>{{joueur.nom}}</div>
       </mat-panel-description>
      </mat-expansion-panel-header>
      <app-joueur nom={{joueur.nom}}></app-joueur>

@@ -32,6 +32,7 @@ import { AuthModule } from './auth.module';
 import { MaterialModule } from './material.module';
 import { StatsComponent } from './stats/stats.component';
 import { AdminComponent } from './admin/admin.component';
+import { MessageService } from './message.service';
 
 import {APIAuthInterceptor} from './apiauth.interceptor';
 import { CreejoueurComponent } from './creejoueur/creejoueur.component';
@@ -67,7 +68,9 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
   },
   {
        provide: LOCALE_ID, useValue: 'fr',
-    }],
+    },
+    MessageService,
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,21 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { joueur } from '../models';
 import { ApiService } from '../services';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-classement',
   templateUrl: './classement.component.html',
   styleUrls: ['./classement.component.css']
 })
-export class ClassementComponent implements OnInit {
+export class ClassementComponent implements OnInit, OnDestroy {
   classement: joueur[];
   selectedJoueur: joueur;
   panelOpenState = false;
+  classementSubscription: Subscription;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private messageService: MessageService) { }
 
   ngOnInit() {
     this.getClassememt();
+    this.classementSubscription = this.messageService.receiveClassement()
+      .subscribe(message => {
+        this.getClassememt();
+        console.log('New Classemenet Received');
+      });
+  }
+
+  ngOnDestroy() {
+      // unsubscribe to ensure no memory leaks
+      this.classementSubscription.unsubscribe();
   }
 
   onSelect(joueur: joueur): void {
@@ -24,6 +38,9 @@ export class ClassementComponent implements OnInit {
 
  getClassememt(): void {
     this.apiService.classementGET()
-      .subscribe(classement => this.classement = classement);
+      .subscribe(classement => {
+        this.classement = classement;
+        // this.onSelect(classement[0]);
+      });
   }
 }

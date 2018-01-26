@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,  OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input,  OnChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -28,6 +28,7 @@ export class AdminComponent implements OnChanges, OnInit {
   @Input() @converter.InputConverter() joueur: string;
   @Input() @converter.InputConverter(converter.BooleanConverter) isAdmin  = false;
   @Input() @converter.InputConverter(converter.BooleanConverter)  isActif = false;
+  @Output() matchModifie = new EventEmitter();
   nomJoueur: string;
   listeJoueurs: string[];
 
@@ -207,17 +208,15 @@ export class AdminComponent implements OnChanges, OnInit {
   }
 
   onSubmit() {
-    console.log(this.partieFormGroup.value);
-    console.log(this.match);
+    /*console.log(this.partieFormGroup.value);
+    console.log(this.match);*/
     this.partieFormGroup.updateValueAndValidity();
-    console.log('pristine; ' + this.partieFormGroup.pristine);
+    // console.log('pristine; ' + this.partieFormGroup.pristine);
     if (this.partieFormGroup.invalid) {
       console.log('form is invalid');
       return;
     }
     this.openSnackBar('Sauvegarde de la partie en cours', '👾');
-
-    console.log(JSON.stringify(this.match));
 
     this.saveMatch(this.match);
   }
@@ -231,11 +230,13 @@ export class AdminComponent implements OnChanges, OnInit {
     console.log('Saving match');
      this.apiService.matchPUT(match)
      .subscribe(match => {
-       console.log('Saved match');
-       console.log(JSON.stringify(match));
-       this.openSnackBar('Sauvegarde réussie', '😎');
+       /*console.log('Saved match');
+       console.log(JSON.stringify(match));*/
+       this.openSnackBar('Sauvegarde réussie ' + match.id, '😎');
        // TODO Add snackbarinfo if save incomplete
        this.revert();
+       console.log('emit');
+       this.matchModifie.emit('matchmodifie');
      },
      error => {
        console.log('oops', error.error);

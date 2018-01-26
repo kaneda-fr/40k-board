@@ -10,7 +10,7 @@
 	  </h2>
 	</div>
 	<div style="text-align:center">
-		<app-classement></app-classement>
+		 <app-classement></app-classement>
 	</div>
  	</mat-tab>
  	<mat-tab label="Stats">
@@ -41,10 +41,10 @@
 	  		</button>
 	</div>
 	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown')" style="text-align:center">
- 		<app-admin joueur={{joueur}} isAdmin={{isAdmin}} isActif={{isActif}}></app-admin>
+ 		<app-admin joueur={{joueur}} isAdmin={{isAdmin}} isActif={{isActif}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-admin>
 	</div>
 	<div *ngIf="(isLoggedIn) && (joueur === 'unknown')" style="text-align:center">
- 		<app-creejoueur fbName={{fbName}} userId={{userId}} (joueurModifie)="miseajour($event)"></app-creejoueur>
+ 		<app-creejoueur fbName={{fbName}} userId={{userId}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-creejoueur>
 	</div>
 
 	</mat-tab>

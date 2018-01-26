@@ -2,6 +2,7 @@ import { Component, OnInit, isDevMode } from '@angular/core';
 import { FacebookService, LoginResponse} from 'ngx-facebook';
 import { ApiService } from './services';
 import { AuthService } from './auth.service';
+import { MessageService } from './message.service';
 
 import { environment } from '../environments/environment';
 
@@ -20,7 +21,12 @@ export class AppComponent implements OnInit {
   isAdmin = false;
   isActif = false;
 
-  constructor(private fb: FacebookService, private apiService: ApiService, private authService: AuthService) { }
+  constructor(
+    private fb: FacebookService,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) { }
 
    ngOnInit() {
          console.log('Admin type: ' + typeof this.isAdmin);
@@ -127,5 +133,9 @@ export class AppComponent implements OnInit {
     // Handle the event
     console.log(JSON.stringify(nom));
     this.joueur = nom;
+  }
+
+  miseajourClassement(event) {
+    this.messageService.nouveauClassement();
   }
 }
