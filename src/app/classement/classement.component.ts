@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { joueur } from '../models';
 import { ApiService } from '../services';
 import { MessageService } from '../message.service';
+import * as converter from '../InputConverter';
 
 @Component({
   selector: 'app-classement',
@@ -11,6 +12,7 @@ import { MessageService } from '../message.service';
   styleUrls: ['./classement.component.css']
 })
 export class ClassementComponent implements OnInit, OnDestroy {
+  @Input() @converter.InputConverter() isAdmin: boolean;
   classement: joueur[];
   selectedJoueur: joueur;
   panelOpenState = false;

@@ -4,7 +4,7 @@
 	border-radius: 20px 20px 20px 20px;
 	overflow:hidden;
 	max-width: 900px;
-	min-width: 600px;
+	min-width: 900px;
 	margin-right: auto; 
 	margin-left: auto;
 	font-size: 14px;
@@ -13,4 +13,40 @@
 .victory {
 	width: 30px;
 	heigth: 30px;
+}
+
+.match-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mat-header-cell.mat-sort-header-container {
+  color: black;
+}
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-row {
+	background-color: rgba(201, 204, 214, 0.1);
+}
+
+.mat-paginator {
+	background-color: rgba(201, 204, 214, 0.1);
+}
+
+.mat-cell {
+		color: #43425a;
 }

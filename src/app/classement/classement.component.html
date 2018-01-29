@@ -1,4 +1,4 @@
-<div class="classement">
+<div class="classement" fxLayout="row" fxLayoutAlign="center center" >
 <mat-accordion>
 	 <mat-expansion-panel
 	 	[expanded]="selectedJoueur === joueur"
@@ -17,9 +17,8 @@
     </mat-expansion-panel>
 </mat-accordion>
 
-<div *ngIf="selectedJoueur" class="badge">
-  <app-match joueur={{selectedJoueur.nom}}></app-match>
+<div *ngIf="selectedJoueur" class="Xbadge">
+  <app-match joueur={{selectedJoueur.nom}} isAdmin={{isAdmin}}></app-match>
 </div>
 </div>
-
 

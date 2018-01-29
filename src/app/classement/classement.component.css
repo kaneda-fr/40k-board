@@ -10,9 +10,9 @@
   list-style-type: none;
   padding: 0;
   /* width: 15em;*/
-  position: fixed;
-  left: 50%;
-  margin-left: -100px;
+  -position: fixed;
+  -left: 50%;
+  -margin-left: -100px;
 }
 
 .classement table{
@@ -69,7 +69,7 @@
 	color: white !important;
 }
 
-.classement .text {
+.xclassement .text {
   position: relative;
   top: -3px;
 }

@@ -4,14 +4,14 @@
 
 <mat-tab-group class="main-tab-group">
   <mat-tab label="Classement">
+  <div>
 	<div style="text-align:center">
-	  <h2>
+	  <h2>	
 	    {{ title }}
 	  </h2>
 	</div>
-	<div style="text-align:center">
-		 <app-classement></app-classement>
-	</div>
+		 <app-classement isAdmin={{isAdmin}}></app-classement>
+		 </div>
  	</mat-tab>
  	<mat-tab label="Stats">
 		<app-stats></app-stats>

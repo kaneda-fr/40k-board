@@ -2,6 +2,7 @@ import '../polyfills';
 import 'hammerjs';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserModule } from '@angular/platform-browser';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { registerLocaleData } from '@angular/common';
@@ -52,6 +53,7 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
