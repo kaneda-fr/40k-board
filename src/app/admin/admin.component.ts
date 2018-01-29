@@ -58,6 +58,13 @@ export class AdminComponent implements OnChanges, OnInit {
       type: 'Eternal War',
       scenario: ['Largage de Ravitaillement', 'Terre Calcinée', 'Dominer et Détruire', 'Ascension', 'Patrouille Volante']
     },
+    {
+      type: 'Fat of War',
+      scenario: [
+        'S1: Largage de Ravitaillement | Mort confirmé',
+        'S2: La Relique | Ordre Scellée',
+        'S3: Xenocide | Cibles d\'opportunité']
+    },
     ];
 
   match: match;
