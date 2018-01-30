@@ -12,7 +12,7 @@
 		</mat-form-field>
 		
 		<mat-form-field>
-			<input matInput  type="email" placeholder="email" [formControl]="joueurForm.get('email')" [(ngModel)]="joueur.email" required>
+			<input matInput  autocomplete='email' type="email" placeholder="email" [formControl]="joueurForm.get('email')" [(ngModel)]="joueur.email" required>
 			<mat-error>email incorrect.</mat-error>
 		</mat-form-field>
 		<br>

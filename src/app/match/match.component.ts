@@ -39,8 +39,8 @@ export class MatchComponent implements OnChanges, AfterViewInit {
     const joueur = changes['joueur'];
     if (joueur !== undefined) {
       console.log('change ' + joueur.currentValue);
+      this.getMatch(joueur.currentValue);
     }
-    this.getMatch(joueur.currentValue);
   }
 
    getMatch(nom?: string): void {

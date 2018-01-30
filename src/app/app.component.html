@@ -40,8 +40,13 @@
 	    		Login
 	  		</button>
 	</div>
-	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown')" style="text-align:center">
+	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown') && isActif" style="text-align:center">
  		<app-admin joueur={{joueur}} isAdmin={{isAdmin}} isActif={{isActif}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-admin>
+	</div>
+	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown') && !isActif" style="text-align:center">
+		<p>
+			Votre compte est en attente d'activation, pour toute question contactez un admin 40k.
+		</p>
 	</div>
 	<div *ngIf="(isLoggedIn) && (joueur === 'unknown')" style="text-align:center">
  		<app-creejoueur fbName={{fbName}} userId={{userId}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-creejoueur>

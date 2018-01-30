@@ -39,13 +39,13 @@ export class AdminComponent implements OnChanges, OnInit {
     'Sisters of Silence', 'Space Marines', 'Space Wolves', 'Tau Empire', 'The Inquisition',
     'Thousand Sons', 'Tyranids', 'Ynnari'];
   listeType = [
-    {
+   {
       type: 'Match Play',
-      scenario: ['S1', 'S2']
+      scenario: ['Match Play']
     },
     {
       type: 'Open Play',
-      scenario: ['S3', 'S4']
+      scenario: ['Open Play']
     },
     {
       type: 'Maelstrom of War',
@@ -140,7 +140,6 @@ export class AdminComponent implements OnChanges, OnInit {
       type: new FormControl(),
       scenario: new FormControl(),
       joueur: new FormArray([]),
-      // joueur:  this.formBuilder.array([]),
     });
 
     if (this.match.joueurs.length === 0) {
@@ -148,6 +147,7 @@ export class AdminComponent implements OnChanges, OnInit {
         this.ajouteJoueur();
       }
     }
+    this.match.joueurs[0].nom = this.joueur;
 
     this.partieFormGroup.controls['points'].valueChanges.subscribe(
       value => {
