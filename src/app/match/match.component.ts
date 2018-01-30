@@ -12,9 +12,10 @@ import * as converter from '../InputConverter';
 export class MatchComponent implements OnChanges, AfterViewInit {
   @Input() @converter.InputConverter() joueur: string;
   @Input() @converter.InputConverter() isAdmin: boolean;
-  matches: match[];
-  data: DataRow[];
-  dataSource = new MatTableDataSource<DataRow>(this.data);
+  // matches: match[];
+  // data: DataRow[];
+  noMatch = true;
+  dataSource = new MatTableDataSource<DataRow>([]);
   displayedColumns = ['date', 'points', 'resultat', 'armee', 'adversaire', 'armeeAdverse'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -50,6 +51,8 @@ export class MatchComponent implements OnChanges, AfterViewInit {
        const mydata = new Array();
        let indexJoueur: number;
        let indexAdversaire: number;
+
+       this.noMatch = !(res.length > 0) ;
 
        for (const match of res) {
         let row: DataRow;

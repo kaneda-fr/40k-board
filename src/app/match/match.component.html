@@ -13,7 +13,7 @@
   </mat-grid-list>
 </div>
 -->
-<div class="match-container show-match ">
+<div class="match-container show-match " *ngIf="!noMatch">
 <mat-table #table [dataSource]="dataSource" matSort>
 <!-- Position Column -->
     <ng-container matColumnDef="date">
