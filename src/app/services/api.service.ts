@@ -65,6 +65,43 @@ export class ApiService extends BaseService {
   }
 
   /**
+   * calcule le classement
+   */
+   classementPUTResponse(): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `/classement`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * calcule le classement
+   */
+   classementPUT(): Observable<void> {
+    return this.classementPUTResponse().pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
    * retourne un joueur par id
    * @param nom nom du joueur
    * @return show one player

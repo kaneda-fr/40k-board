@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, Input,  AfterViewInit, OnChanges, SimpleC
 import {MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
 import { joueur, match } from '../models';
 import { ApiService } from '../services';
+import { AuthService } from '../auth.service';
 import * as converter from '../InputConverter';
 
 @Component({
@@ -11,12 +12,14 @@ import * as converter from '../InputConverter';
 })
 export class MatchComponent implements OnChanges, AfterViewInit {
   @Input() @converter.InputConverter() joueur: string;
-  @Input() @converter.InputConverter() isAdmin: boolean;
+  // @Input() @converter.InputConverter() isAdmin: boolean;
   // matches: match[];
   // data: DataRow[];
+  isAdmin = false;
+  isLoggedIn = false;
   noMatch = true;
   dataSource = new MatTableDataSource<DataRow>([]);
-  displayedColumns = ['date', 'points', 'resultat', 'armee', 'adversaire', 'armeeAdverse'];
+  displayedColumns = ['date', 'points', 'resultat', 'armee', 'adversaire', 'armeeAdverse', 'edit'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -30,7 +33,7 @@ export class MatchComponent implements OnChanges, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-   constructor(private apiService: ApiService, private changeDetectorRefs: ChangeDetectorRef) { }
+   constructor(private apiService: ApiService, private changeDetectorRefs: ChangeDetectorRef, public authService: AuthService) { }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
     if (this.isAdmin === true && this.displayedColumns.indexOf('action') === -1) {
@@ -66,6 +69,8 @@ export class MatchComponent implements OnChanges, AfterViewInit {
          row.armeeAdverse = match.joueurs[indexAdversaire].armee;
          row.points = match.points;
          row.armee = match.joueurs[indexJoueur].armee;
+         row.id = match.id;
+         row.joueurentree = match.joueurentree;
          mydata.push(row);
         }
        this.dataSource = new MatTableDataSource<DataRow>(mydata);
@@ -83,4 +88,6 @@ export interface DataRow {
   armeeAdverse: string;
   armee: string;
   resultat: string;
+  id: string;
+  joueurentree: string;
 }

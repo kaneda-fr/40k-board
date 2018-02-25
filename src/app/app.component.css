@@ -1,19 +1,50 @@
-
 img {
-    width:inherit;
+	width: inherit;
 }
 
 div.fixed-logo {
-   position: fixed;
-   top: 20px;
-   right: 20px;
+   position: relative;
+   top: -20px;
+   xright: 20px;
    height: 40px;
    width: 100px;
    /* background: #401145; */
-   z-index: 0;
+   xz-index: 0;
    /* color: #FFF;
    opacity: 1; 
    transition: opacity .25s ease-in-out;
    -moz-transition: opacity .25s ease-in-out;
    -webkit-transition: opacity .25s ease-in-out */
+}
+
+div.board {
+	position: relative;
+}
+
+div.popup {
+	position: absolute;
+	top:	50px;
+	left:	50%;
+	transform: translate(-50%, -50%);
+	Xmargin: 0 auto;
+	X-webkit-transform: translate(-50%, -50%);
+    Xtransform: translate(-50%, -50%);
+	Xzindex: 2;
+}
+
+.loginButton {
+	width: 35px;
+	heigth: 35px;
+	cursor: pointer;
+}
+
+.adminIcon {
+	width: 35px;
+	heigth: 35px;
+}
+
+span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;      
 }

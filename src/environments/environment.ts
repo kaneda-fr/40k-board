@@ -5,5 +5,7 @@
 
 export const environment = {
   production: false,
-  fbAppId: '638322569876518'
+  fbAppId: '638322569876518',
+  rollbarToken: 'd9fd60deaa54417fa4d6829dabf4976e',
+  rollbarEnabled: false,
 };

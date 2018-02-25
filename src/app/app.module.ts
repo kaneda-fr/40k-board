@@ -31,12 +31,16 @@ import { AuthModule } from './auth.module';
 
 
 import { MaterialModule } from './material.module';
+import { RollbarModule } from './rollbar.module';
 import { StatsComponent } from './stats/stats.component';
 import { AdminComponent } from './admin/admin.component';
 import { MessageService } from './message.service';
 
-import {APIAuthInterceptor} from './apiauth.interceptor';
+import { APIAuthInterceptor } from './apiauth.interceptor';
 import { CreejoueurComponent } from './creejoueur/creejoueur.component';
+import { AppRoutingModule } from './app-routing/app-routing.module';
+import { ReglementComponent } from './reglement/reglement.component';
+import { AuthguardService } from './authguard.service';
 
 
 @NgModule({
@@ -49,6 +53,7 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
     StatsComponent,
     AdminComponent,
     CreejoueurComponent,
+    ReglementComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +66,9 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
     ApiModule,
     AuthModule,
     MaterialModule,
+    RollbarModule,
     FacebookModule.forRoot(),
+    AppRoutingModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -72,6 +79,7 @@ import { CreejoueurComponent } from './creejoueur/creejoueur.component';
        provide: LOCALE_ID, useValue: 'fr',
     },
     MessageService,
+    AuthguardService,
     ],
   bootstrap: [AppComponent]
 })

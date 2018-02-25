@@ -52,3 +52,8 @@
 .mat-cell {
 		color: #43425a;
 }
+
+.icon {
+	height: 20px;
+    width: auto;/*maintain aspect ratio*/
+}

@@ -12,7 +12,7 @@ import * as converter from '../InputConverter';
   styleUrls: ['./classement.component.css']
 })
 export class ClassementComponent implements OnInit, OnDestroy {
-  @Input() @converter.InputConverter() isAdmin: boolean;
+
   classement: joueur[];
   selectedJoueur: joueur;
   panelOpenState = false;

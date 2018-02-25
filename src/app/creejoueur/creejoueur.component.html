@@ -1,34 +1,37 @@
-
-<form [formGroup]="joueurForm" (ngSubmit)="onSubmit()" #JoueurForm="ngForm">
-	<div class="creation-joueur">
-		<h2> Création de Compte </h2>
-		
-		<p>Bienvenue {{fbName}}</p>
-		
-		
-		<mat-form-field>
-			<input matInput  placeholder="Nom ou Nickname" [formControl]="joueurForm.get('nom')" [(ngModel)]="joueur.nom" required>
-			<mat-error>Entrez votre nom ou nick</mat-error>
-		</mat-form-field>
-		
-		<mat-form-field>
-			<input matInput  autocomplete='email' type="email" placeholder="email" [formControl]="joueurForm.get('email')" [(ngModel)]="joueur.email" required>
-			<mat-error>email incorrect.</mat-error>
-		</mat-form-field>
-		<br>
-		<mat-form-field>
-			<mat-select placeholder="Armee" required [(value)]="joueur.armee">
-				<mat-option *ngFor="let armee of listeArmees" [value]="armee"> {{ armee }}</mat-option>
-			</mat-select>
-		</mat-form-field>
-		
-		<mat-form-field>
-			<input matInput type="number" placeholder="Nombre de points" [formControl]="joueurForm.get('points')" [(ngModel)]="joueur.points" required>
-			<mat-error>Le nombre de poiints doit etre superieur a 0.</mat-error>
-		</mat-form-field>
+<div class="creation-joueur">
+	<form [formGroup]="joueurForm" (ngSubmit)="onSubmit()" #JoueurForm="ngForm">
+	
+			<h2> Création de Compte </h2>
+			
+			<p>Bienvenue {{fbName}}</p>
+			
+			
+			<mat-form-field>
+				<input matInput  placeholder="Nom ou Nickname" [formControl]="joueurForm.get('nom')" [(ngModel)]="joueur.nom" required>
+				<mat-error>Entrez votre nom ou nick</mat-error>
+			</mat-form-field>
+			
+			<mat-form-field>
+				<input matInput  autocomplete='email' type="email" placeholder="email" [formControl]="joueurForm.get('email')" [(ngModel)]="joueur.email" required>
+				<mat-error>email incorrect.</mat-error>
+			</mat-form-field>
 			<br>
-			<button type="submit"
-			[disabled]="joueurForm.pristine || joueurForm.invalid" class="btn btn-success">Enregistrer</button> &nbsp;   
-
-	</div>
-</form>
+			<mat-form-field>
+				<mat-select placeholder="Armee" required [(value)]="joueur.armee">
+					<mat-option *ngFor="let armee of listeArmees" [value]="armee"> {{ armee }}</mat-option>
+				</mat-select>
+			</mat-form-field>
+			
+			<mat-form-field>
+				<input matInput type="number" placeholder="Nombre de points" [formControl]="joueurForm.get('points')" [(ngModel)]="joueur.points" required>
+				<mat-error>Le nombre de poiints doit etre superieur a 0.</mat-error>
+			</mat-form-field>
+				<p *ngIf="!sending">
+					<button type="submit"
+					[disabled]="joueurForm.pristine || joueurForm.invalid" class="btn btn-success">Enregistrer</button> &nbsp;   
+					<button (click)="cancel()">Annuler</button>
+				</p>
+	
+	
+	</form>
+</div>

@@ -1,172 +1,171 @@
-<p>Vous êtes connecté en tant que {{nomJoueur}}
-<span *ngIf="isAdmin === true">(admin)</span>
-</p>
-
-<div *ngIf="isActif === true; then actif">
-</div>
-
-<ng-template #inactif>
-<p *ngIf="isActif !== true">Compte désactivé, contactez un admin du site ou de l'assoce.</p>
-</ng-template>
-
-<ng-template #actif>
-<form [formGroup]="partieFormGroup" (ngSubmit)="onSubmit()" #MatchForm="ngForm">
-<div class="entree-match">
-	  <h3>Détails de la partie</h3>
-	  <mat-grid-list cols="4" rowHeight="65px">
-	  	<mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-		  <mat-grid-tile [colspan]=2 [rowspan]=1>
-		  	  <mat-form-field>
-				  <input matInput [matDatepicker]="datepicker" [formControl]="partieFormGroup.get('date')" [(ngModel)]="match.date" placeholder="Date de la partie" required>
-				  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-				  <mat-datepicker #datepicker></mat-datepicker>
-				  <mat-error>Date non valide</mat-error>
-			  </mat-form-field>
-		  </mat-grid-tile>
-		  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-
-	<mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-	  <mat-grid-tile [colspan]=1 [rowspan]=1>
-	  	<mat-form-field>
-		  <mat-select placeholder="Type de partie" [(value)]="match.type" [formControl]="partieFormGroup.get('type')">
-		      <mat-option>- Aucun -</mat-option>
-		      <mat-option *ngFor="let group of listeType" [value]="group.type"> {{ group.type }}</mat-option>
-		    </mat-select>
-		  </mat-form-field>
-	  </mat-grid-tile>
-	  <mat-grid-tile [colspan]=1 [rowspan]=1>
-		   <mat-form-field>
-		    <mat-select placeholder="Scenario" [(value)]="match.scenario" [formControl]="partieFormGroup.get('scenario')">
-		      <mat-option>- Aucun -</mat-option>
-		      <!--  mat-option *ngFor="let scenario of listeScenario" [value]="scenario"> {{ scenario }}</mat-option> -->
-		      <mat-optgroup *ngFor="let group of filteredListeType | async" [label]="group.type">
-			      <mat-option *ngFor="let scenario of group.scenario" [value]="scenario">
-			        {{ scenario }}
-			      </mat-option>
-			    </mat-optgroup>
-		    </mat-select>
-		  </mat-form-field>
-	  </mat-grid-tile>
-	  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-	  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-	  <mat-grid-tile [colspan]=1 [rowspan]=1>
-		  <mat-form-field>
-		    <input matInput type="number" placeholder="Nombre de points" [formControl]="partieFormGroup.get('points')" [(ngModel)]="match.points" required>
-		    <mat-error>Le nombre de poiints doir etre superieur a 0.</mat-error>
-		   </mat-form-field>
-	   </mat-grid-tile>
-	   <mat-grid-tile [colspan]=1 [rowspan]=1>
-	  	  <mat-form-field>
-		    <mat-select placeholder="Fin au tour" required [formControl]="partieFormGroup.get('derniertour')" [(value)]="match.derniertour">
-		      <mat-option *ngFor="let tour of [1,2,3,4,5,6]" [value]="tour"> {{ tour }}</mat-option>
-		    </mat-select>
-		    </mat-form-field>
-	    </mat-grid-tile>
-	    <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
-	  </mat-grid-list>	    
-	   
-	   <div *ngFor="let joueur of match.joueurs let i = index">
-	  <h3>Joueur {{i+1}}</h3>
-		<mat-grid-list cols="4" rowHeight="85px">
-		
+<div *ngIf="authService.isLoggedIn">
+	<div *ngIf="authService.isActif === true; then actif; else inactif">
+	</div>
+	
+	<ng-template #inactif>
+	<p *ngIf="authService.isActif !== true" align="center">Compte désactivé, contactez un admin du site ou de l'assoce.</p>
+	</ng-template>
+	
+	<ng-template #actif>
+	<form [formGroup]="partieFormGroup" (ngSubmit)="onSubmit()" #MatchForm="ngForm">
+	<div class="entree-match">
+		  <h3>Détails de la partie</h3>
+		  <mat-grid-list cols="4" rowHeight="65px">
+		  	<mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
+			  <mat-grid-tile [colspan]=2 [rowspan]=1>
+			  	  <mat-form-field>
+					  <input matInput [matDatepicker]="datepicker" [formControl]="partieFormGroup.get('date')" [(ngModel)]="match.date" placeholder="Date de la partie" required>
+					  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+					  <mat-datepicker #datepicker></mat-datepicker>
+					  <mat-error>Date non valide</mat-error>
+				  </mat-form-field>
+			  </mat-grid-tile>
+			  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
+	
+		<mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
 		  <mat-grid-tile [colspan]=1 [rowspan]=1>
-			  <mat-form-field>
-			  		<ng-container *ngIf="i == 0 && !isAdmin then nomNoSelect else nomSelect"> </ng-container>
-			  		<ng-template #nomSelect>
-					  <mat-select placeholder="Nom" [formControl]="joueurFormControl(i, 'nom')" [(value)]="this.match.joueurs[i].nom" required>
-					    <mat-option *ngFor="let nom of listeJoueurs" [value]="nom" [disabled]="checkNomUsed(nom, i)"> {{ nom }}</mat-option>
-					  </mat-select>
-				  	</ng-template>
-				  	<ng-template #nomNoSelect>
-				  		<mat-select placeholder=""  [disabled]="true" [(value)]="this.match.joueurs[i].nom" >
-					      <mat-option [value]="this.match.joueurs[i].nom"> {{ this.match.joueurs[i].nom }}</mat-option>
-					    </mat-select>
-				  	</ng-template>
-
-			  </mat-form-field>
-		  </mat-grid-tile>
-		  
-  		  <mat-grid-tile [colspan]=1 [rowspan]=1>
- 			  <mat-form-field>
-			    <mat-select placeholder="Armee" required [(value)]="this.match.joueurs[i].armee">
-			      <mat-option *ngFor="let armee of listeArmees" [value]="armee"> {{ armee }}</mat-option>
+		  	<mat-form-field>
+			  <mat-select placeholder="Type de partie" [(value)]="match.type" [formControl]="partieFormGroup.get('type')">
+			      <mat-option>- Aucun -</mat-option>
+			      <mat-option *ngFor="let group of listeType" [value]="group.type"> {{ group.type }}</mat-option>
 			    </mat-select>
 			  </mat-form-field>
 		  </mat-grid-tile>
-		  
-		  <mat-grid-tile [colspan]=1 [rowspan]=2>
-		  	<table>
-			  	<tr>
-			  		<td>Vainqueur</td>
-			  		<td><mat-checkbox 
-			  			[(ngModel)]="this.match.joueurs[i].vainqueur" 
-			  			[formControl]="joueurFormControl(i, 'vainqueur')" 
-			  			(ngModelChange)="updateUniqueCheckedOptions(i, 'vainqueur', $event)"
-			  			></mat-checkbox></td>
-			  	</tr>
-			  	<tr>
-			  		<td>Table Rase</td>
-			  		<td><mat-checkbox 
-			  			[(ngModel)]="this.match.joueurs[i].tablerase" 
-			  			[formControl]="joueurFormControl(i, 'tablerase')"
-			  			(ngModelChange)="updateUniqueCheckedOptions(i, 'tablerase', $event)"></mat-checkbox></td>
-			  	</tr>
-			  	<tr>
-			  		<td>Abandon</td>
-			  		<td><mat-checkbox 
-			  			[(ngModel)]="this.match.joueurs[i].abandon" 
-			  			[formControl]="joueurFormControl(i, 'abandon')"
-			  			(ngModelChange)="updateUniqueCheckedOptions(i, 'abandon', $event)"></mat-checkbox></td>
-			  	</tr>
-			  </table>
-		  </mat-grid-tile>
-		  <mat-grid-tile [colspan]=1 [rowspan]=2>
-		  	<table>
-			  	<tr>
-			  		<td><mat-checkbox 
-			  			[(ngModel)]="this.match.joueurs[i].premiersang" 
-			  			[formControl]="joueurFormControl(i, 'premiersang')"
-			  			(ngModelChange)="updateUniqueCheckedOptions(i, 'premiersang', $event)"></mat-checkbox></td>
-			  		<td>Premier Sang</td>
-			  	</tr>
-		  		<tr>
-			  		<td><mat-checkbox [(ngModel)]="this.match.joueurs[i].seigneurdeguerre" [formControl]="joueurFormControl(i, 'seigneurdeguerre')"></mat-checkbox></td>
-			  		<td>Seigneur de Guerre</td>
-			  	</tr>
-			  	<tr>
-			  		<td><mat-checkbox [(ngModel)]="this.match.joueurs[i].briseurdeligne" [formControl]="joueurFormControl(i, 'briseurdeligne')"></mat-checkbox></td>
-			  		<td>Briseur de ligne</td>
-			  	</tr>
-		  	</table>
-	  	</mat-grid-tile>
-		
-			<mat-grid-tile [colspan]=1 [rowspan]=1>
-			  <mat-form-field>
-			    <input matInput type="number" placeholder="Score" [formControl]="joueurFormControl(i, 'score')" [(ngModel)]="this.match.joueurs[i].score" required>
-			    <mat-error>Score incorrect</mat-error>
+		  <mat-grid-tile [colspan]=1 [rowspan]=1>
+			   <mat-form-field>
+			    <mat-select placeholder="Scenario" [(value)]="match.scenario" [formControl]="partieFormGroup.get('scenario')">
+			      <mat-option>- Aucun -</mat-option>
+			      <!--  mat-option *ngFor="let scenario of listeScenario" [value]="scenario"> {{ scenario }}</mat-option> -->
+			      <mat-optgroup *ngFor="let group of filteredListeType | async" [label]="group.type">
+				      <mat-option *ngFor="let scenario of group.scenario" [value]="scenario">
+				        {{ scenario }}
+				      </mat-option>
+				    </mat-optgroup>
+			    </mat-select>
 			  </mat-form-field>
-			</mat-grid-tile>
-			<mat-grid-tile [colspan]=1 [rowspan]=1>
-		    	<mat-form-field>
-				    <input matInput type="number" placeholder="Points" [formControl]="joueurFormControl(i, 'points')" [(ngModel)]="this.match.joueurs[i].points" required>
-				    <mat-error>{{getPointsErrorMessage(i)}}</mat-error>
-			  	</mat-form-field>
-			</mat-grid-tile>
-		</mat-grid-list>
+		  </mat-grid-tile>
+		  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
+		  <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
+		  <mat-grid-tile [colspan]=1 [rowspan]=1>
+			  <mat-form-field>
+			    <input matInput type="number" placeholder="Nombre de points" [formControl]="partieFormGroup.get('points')" [(ngModel)]="match.points" required>
+			    <mat-error>Le nombre de poiints doir etre superieur a 0.</mat-error>
+			   </mat-form-field>
+		   </mat-grid-tile>
+		   <mat-grid-tile [colspan]=1 [rowspan]=1>
+		  	  <mat-form-field>
+			    <mat-select placeholder="Fin au tour" required [formControl]="partieFormGroup.get('derniertour')" [(value)]="match.derniertour">
+			      <mat-option *ngFor="let tour of [1,2,3,4,5,6]" [value]="tour"> {{ tour }}</mat-option>
+			    </mat-select>
+			    </mat-form-field>
+		    </mat-grid-tile>
+		    <mat-grid-tile [colspan]=1 [rowspan]=1></mat-grid-tile>
+		  </mat-grid-list>	    
+		   
+		   <div *ngFor="let joueur of match.joueurs let i = index">
+		  <h3>Joueur {{i+1}}</h3>
+			<mat-grid-list cols="4" rowHeight="85px">
+			
+			  <mat-grid-tile [colspan]=1 [rowspan]=1>
+				  <mat-form-field>
+
+				  		<ng-container *ngIf="authService.isAdmin then nomSelect else nomNoSelect"> </ng-container>
+				  		<ng-template #nomSelect>
+						  <mat-select placeholder="Nom" [formControl]="joueurFormControl(i, 'nom')" [(value)]="match.joueurs[i].nom" required>
+						    <mat-option *ngFor="let nom of listeJoueurs" [value]="nom" [disabled]="checkNomUsed(nom, i)"> {{ nom }}</mat-option>
+						  </mat-select>
+					  	</ng-template>
+					  	<ng-template #nomNoSelect>
+					  		<mat-select placeholder="" [formControl]="joueurFormControl(i, 'nom')" [disabled]="checkJoueur(i)" [(value)]="match.joueurs[i].nom" >
+						      <mat-option *ngFor="let nom of listeJoueurs" [value]="nom" [disabled]="checkNomUsed(nom, i)"> {{ nom }}</mat-option>
+						    </mat-select>
+					  	</ng-template>
+
+				  </mat-form-field>
+			  </mat-grid-tile>
+			  
+	  		  <mat-grid-tile [colspan]=1 [rowspan]=1>
+	 			  <mat-form-field>
+				    <mat-select placeholder="Armee" required [(value)]="this.match.joueurs[i].armee">
+				      <mat-option *ngFor="let armee of listeArmees" [value]="armee"> {{ armee }}</mat-option>
+				    </mat-select>
+				  </mat-form-field>
+			  </mat-grid-tile>
+			  
+			  <mat-grid-tile [colspan]=1 [rowspan]=2>
+			  	<table>
+				  	<tr>
+				  		<td>Vainqueur</td>
+				  		<td><mat-checkbox 
+				  			[(ngModel)]="this.match.joueurs[i].vainqueur" 
+				  			[formControl]="joueurFormControl(i, 'vainqueur')" 
+				  			(ngModelChange)="updateUniqueCheckedOptions(i, 'vainqueur', $event)"
+				  			></mat-checkbox></td>
+				  	</tr>
+				  	<tr>
+				  		<td>Table Rase</td>
+				  		<td><mat-checkbox 
+				  			[(ngModel)]="this.match.joueurs[i].tablerase" 
+				  			[formControl]="joueurFormControl(i, 'tablerase')"
+				  			(ngModelChange)="updateUniqueCheckedOptions(i, 'tablerase', $event)"></mat-checkbox></td>
+				  	</tr>
+				  	<tr>
+				  		<td>Abandon</td>
+				  		<td><mat-checkbox 
+				  			[(ngModel)]="this.match.joueurs[i].abandon" 
+				  			[formControl]="joueurFormControl(i, 'abandon')"
+				  			(ngModelChange)="updateUniqueCheckedOptions(i, 'abandon', $event)"></mat-checkbox></td>
+				  	</tr>
+				  </table>
+			  </mat-grid-tile>
+			  <mat-grid-tile [colspan]=1 [rowspan]=2>
+			  	<table>
+				  	<tr>
+				  		<td><mat-checkbox 
+				  			[(ngModel)]="this.match.joueurs[i].premiersang" 
+				  			[formControl]="joueurFormControl(i, 'premiersang')"
+				  			(ngModelChange)="updateUniqueCheckedOptions(i, 'premiersang', $event)"></mat-checkbox></td>
+				  		<td>Premier Sang</td>
+				  	</tr>
+			  		<tr>
+				  		<td><mat-checkbox [(ngModel)]="this.match.joueurs[i].seigneurdeguerre" [formControl]="joueurFormControl(i, 'seigneurdeguerre')"></mat-checkbox></td>
+				  		<td>Seigneur de Guerre</td>
+				  	</tr>
+				  	<tr>
+				  		<td><mat-checkbox [(ngModel)]="this.match.joueurs[i].briseurdeligne" [formControl]="joueurFormControl(i, 'briseurdeligne')"></mat-checkbox></td>
+				  		<td>Briseur de ligne</td>
+				  	</tr>
+			  	</table>
+		  	</mat-grid-tile>
+			
+				<mat-grid-tile [colspan]=1 [rowspan]=1>
+				  <mat-form-field>
+				    <input matInput type="number" placeholder="Score" [formControl]="joueurFormControl(i, 'score')" [(ngModel)]="this.match.joueurs[i].score" required>
+				    <mat-error>Score incorrect</mat-error>
+				  </mat-form-field>
+				</mat-grid-tile>
+				<mat-grid-tile [colspan]=1 [rowspan]=1>
+			    	<mat-form-field>
+					    <input matInput type="number" placeholder="Points" [formControl]="joueurFormControl(i, 'points')" [(ngModel)]="this.match.joueurs[i].points" required>
+					    <mat-error>{{getPointsErrorMessage(i)}}</mat-error>
+				  	</mat-form-field>
+				</mat-grid-tile>
+			</mat-grid-list>
+		</div>
 	</div>
+	<div style="margin-bottom: 1em">
+		<!-- <button mat-raised-button 
+		[disabled]="partie.pristine || partie.invalid"  
+		(click)="onSubmit()" class="btn btn-success">Enregistrer</button>
+			<button type="submit"
+	            [disabled]="partie.pristine || partie.invalid" class="btn btn-success">Save</button> &nbsp;  -->
+	     <button type="submit"
+	     		[disabled]="true && (partieFormGroup.pristine || partieFormGroup.invalid)"
+	             class="btn btn-success">Enregistrer</button> &nbsp;      <!--   [disabled]="partie.pristine || partie.invalid"-->
+	     <button type="button" (click)="revert()"
+	            [disabled]="partieFormGroup.pristine && !match.id" class="btn btn-danger">Nouvelle Partie</button>
+	  </div>
+	</form>
+	</ng-template>
 </div>
-<div style="margin-bottom: 1em">
-	<!-- <button mat-raised-button 
-	[disabled]="partie.pristine || partie.invalid"  
-	(click)="onSubmit()" class="btn btn-success">Enregistrer</button>
-		<button type="submit"
-            [disabled]="partie.pristine || partie.invalid" class="btn btn-success">Save</button> &nbsp;  -->
-     <button type="submit"
-     		[disabled]="partieFormGroup.pristine || partieFormGroup.invalid"
-             class="btn btn-success">Enregistrer</button> &nbsp;      <!--   [disabled]="partie.pristine || partie.invalid"-->
-     <button type="button" (click)="revert()"
-            [disabled]="partieFormGroup.pristine" class="btn btn-danger">Nouvelle Partie</button>
-  </div>
-</form>
-</ng-template>
 

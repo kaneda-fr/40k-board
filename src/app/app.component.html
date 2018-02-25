@@ -1,56 +1,37 @@
-<div class="fixed-logo">
- <img src="assets/ludikraken.png" alt="Association Ludikraken"> 
+
+
+ <div fxLayout="row" fxLayoutAlign="left center" >
+ 	<div>
+ 	<ng-container *ngIf="authService.isLoggedIn then loggedin else notloggedin"></ng-container>
+		<ng-template #notloggedin>
+			<!-- button (click)="login()" >Login</button> -->
+			<a (click)="login()"> <img src="assets/unlocked.png" class="loginButton"></a>
+		</ng-template >
+		<ng-template  #loggedin>
+			{{authService.nom()}}
+			<span *ngIf="authService.isAdmin">
+			<img src="assets/skull.png" alt="Admin" class="adminIcon">
+			</span>
+		</ng-template >
+		<!-- button [routerLink]="[{ outlets: { popup: ['login'] } }]">create player</button> -->
+	</div>
+	<div>
+		 <nav mat-tab-nav-bar #mtg>
+		 <a mat-tab-link
+		    *ngFor="let link of navLinks"
+		    [routerLink]="link.path"
+		    routerLinkActive #rla="routerLinkActive"
+		    [active]="rla.isActive">
+		   {{link.label}}
+		 </a>
+		</nav>
+	</div>
+	<div class="fixed-logo">
+ 		<img src="assets/ludikraken.png" alt="Association Ludikraken"> 
+	 </div>
+
 </div>
-
-<mat-tab-group class="main-tab-group">
-  <mat-tab label="Classement">
-  <div>
-	<div style="text-align:center">
-	  <h2>	
-	    {{ title }}
-	  </h2>
-	</div>
-		 <app-classement isAdmin={{isAdmin}}></app-classement>
-		 </div>
- 	</mat-tab>
- 	<mat-tab label="Stats">
-		<app-stats></app-stats>
- 	</mat-tab>
- 	 	<mat-tab label="Reglement">
-		<div style="text-align:center">
-			<h2>Campagne a Echelons - Ludikraken</h2>
-			La campagne suit les regles Echelons de Commandement telles que definies dans le Chapter Approved.
-			<h2>Rappel des points de regles en vigueur</h2>
-			<div style="margin-left: 30%">
-			<div style="text-align:left">
-			<ul>
-				<li>Chaque joueur doit presenter une armee reglementaire</li>
-				<li>Le nombre de points est libre et conveu d'avance entre les joueurs</li>
-				<li>Tout joueur qui ne fait pas de match durant un mois descend d'un echellon</li>
-			</ul>
-			</div>
-			</div>
-			A l'issue d'un match, l'un des joueur doit enregistrer le resultat via la partie Admin du site ou contacter l'equipe 40k via la groupe whatsapp.<BR>
-		</div>
- 	</mat-tab>
- 	<mat-tab label="Saise Partie">
- 	<div *ngIf="!isLoggedIn" style="text-align:center">
-		<p>Vous devez vous connecter pour gerer vos matches</p>
-			<button (click)="login()" class="btn btn-lg btn-primary btn-block">
-	    		Login
-	  		</button>
-	</div>
-	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown') && isActif" style="text-align:center">
- 		<app-admin joueur={{joueur}} isAdmin={{isAdmin}} isActif={{isActif}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-admin>
-	</div>
-	<div *ngIf="(isLoggedIn) && (joueur !== 'unknown') && !isActif" style="text-align:center">
-		<p>
-			Votre compte est en attente d'activation, pour toute question contactez un admin 40k.
-		</p>
-	</div>
-	<div *ngIf="(isLoggedIn) && (joueur === 'unknown')" style="text-align:center">
- 		<app-creejoueur fbName={{fbName}} userId={{userId}} (joueurModifie)="miseajour($event)" (matchModifie)="miseajourClassement($event)"></app-creejoueur>
-	</div>
-
-	</mat-tab>
- </mat-tab-group>
+	 <router-outlet></router-outlet>
+<div class="popup">
+	 <router-outlet name="popup"></router-outlet>
+</div>
