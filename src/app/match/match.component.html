@@ -49,7 +49,7 @@
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let match" >
 			<a [routerLink]="['/match', match.id]" *ngIf="authService.isActif && (match.joueurentree == authService.nom() || authService.admin())">
-					<img src="../../assets/r_engineering_icon.png" alt="Modifier le match" class="icon">
+					<img src="assets/r_engineering_icon.png" alt="Modifier le match" class="icon">
 			</a>
       </mat-cell>
     </ng-container>  
